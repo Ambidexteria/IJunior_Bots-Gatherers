@@ -14,11 +14,13 @@ public class ActionMoveToTarget : IUnitAction
     {
         _mover = moverToTarget;
         _target = target;
-        _mover.TargetReached += InvokeCompletedEvent;
     }
 
     public IEnumerator Launch()
     {
+        Debug.Log($"Move to {_target}");
+
+        _mover.TargetReached += InvokeCompletedEvent;
         _mover.SetTarget(_target);
         _mover.Launch();
 
@@ -27,6 +29,7 @@ public class ActionMoveToTarget : IUnitAction
 
     private void InvokeCompletedEvent()
     {
+        _mover.TargetReached += InvokeCompletedEvent;
         Completed?.Invoke();
     }
 }

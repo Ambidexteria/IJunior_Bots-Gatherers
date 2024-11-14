@@ -7,8 +7,10 @@ public class GenericStateMachine : MonoBehaviour
 {
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private MoverForward _moverForward;
+    [SerializeField] private Resource _resource;
     [SerializeField] private Transform _target1;
     [SerializeField] private Transform _target2;
+    [SerializeField] private Transform _resourcePosition;
     [SerializeField] private float _waitingTime;
     [SerializeField] private bool _loop;
 
@@ -25,9 +27,8 @@ public class GenericStateMachine : MonoBehaviour
     {
         _actions = new List<IUnitAction>();
         _actions.Add(new ActionMoveToTarget(_moverToTarget, _target1));
-        _actions.Add(new ActionWaitForAPeriodOfTime(_waitingTime));
-        _actions.Add(new ActionMoveToTarget(_moverToTarget, _target2));
-        _actions.Add(new ActionMoverForwardForAPeriodOfTime(_moverForward, _waitingTime));
+        _actions.Add(new ActionTakeResource(_resource, _resourcePosition));
+        _actions.Add(new ActionMoveToTarget(_moverToTarget, _target1));
 
         _chainOfActions = new ChainOfActions(_actions);
 
