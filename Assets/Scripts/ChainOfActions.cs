@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 public class ChainOfActions
 {
-    private readonly IEnumerable _actions;
+    private readonly List<IUnitAction> _actions;
 
-    public ChainOfActions(IEnumerable<IUnitAction> actions)
+    public ChainOfActions(List<IUnitAction> actions)
     {
         _actions = actions;
     }
 
-    public IEnumerable GetActions()
+    public int Count => _actions.Count;
+
+    public List<IUnitAction> GetActions()
     {
         return _actions;
     }
