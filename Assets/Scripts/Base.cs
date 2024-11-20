@@ -6,7 +6,7 @@ public class Base : MonoBehaviour
 {
 
     [SerializeField] private Bot[] _bots;
-    [SerializeField] private Resource[] _resourcesOnMap;
+    [SerializeField] private List<Resource> _resourcesOnMap;
     [SerializeField] private int _resources;
     [SerializeField] private ResourceScaner _resourceScaner;
 
@@ -15,9 +15,19 @@ public class Base : MonoBehaviour
         SendBotForGatheringResource(_resourcesOnMap[0]);
     }
 
-    private void ScanForResources()
+    private void OnEnable()
     {
+        _resourceScaner.ResourcesFound += UpdateResourcesOnMap;
+    }
 
+    private void OnDisable()
+    {
+        _resourceScaner.ResourcesFound -= UpdateResourcesOnMap;
+    }
+
+    private void UpdateResourcesOnMap(List<Resource> resources)
+    {
+        _resourcesOnMap = resources;
     }
 
     private void SendBotForGatheringResource(Resource resource)
