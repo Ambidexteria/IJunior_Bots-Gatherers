@@ -20,6 +20,7 @@ public class ActionTakeResource : IUnitAction
     {
         Debug.Log("Take resource");
         _resource.transform.SetParent(_parent);
+        _resource.Take();
         _resource.transform.SetLocalPositionAndRotation(_parent.localPosition, _parent.localRotation);
 
         yield return null;

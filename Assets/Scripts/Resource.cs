@@ -1,18 +1,47 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Resource : MonoBehaviour
+public enum ResourceState
 {
-    // Start is called before the first frame update
-    void Start()
+    Grounded,
+    MarkedForGathering,
+    Taken
+}
+
+[RequireComponent(typeof(Collider))]
+public class Resource : SpawnableObject
+{
+    private Collider _collider;
+    private ResourceState _state;
+
+    public ResourceState State => _state;
+
+    private void Awake()
     {
+        _collider = GetComponent<Collider>();
+
+        _collider.isTrigger = true;
+        _collider.enabled = true;
         
+        _state = ResourceState.Grounded;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Drop()
     {
-        
+        _collider.enabled = true;
+        _state = ResourceState.Grounded;
+    }
+
+    public void Take()
+    {
+        _collider.enabled = false;
+        _state = ResourceState.Taken;
+    }
+
+    public void MarkForGathering()
+    {
+        _state = ResourceState.MarkedForGathering;
     }
 }

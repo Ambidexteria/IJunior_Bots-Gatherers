@@ -62,6 +62,7 @@ public class ActionController : MonoBehaviour
         _currentAction = null;
         _launchedActionCoroutine = null;
         _actions = null;
+        ActionCompleted?.Invoke();
 
         if(_loop)
         {

@@ -4,25 +4,33 @@ using UnityEngine;
 
 public class Base : MonoBehaviour
 {
-
     [SerializeField] private Bot[] _bots;
     [SerializeField] private List<Resource> _resourcesOnMap;
     [SerializeField] private int _resources;
     [SerializeField] private ResourceScaner _resourceScaner;
+    [SerializeField] private ResourceCollector _resourceCollector;
 
-    private void Awake()
+    private void Update()
     {
-        SendBotForGatheringResource(_resourcesOnMap[0]);
+        if (_resourcesOnMap.Count > 0)
+        {
+            if (TryGetResourceOnGround(out Resource resource))
+            {
+                SendBotForGatheringResource(resource);
+            }
+        }
     }
 
     private void OnEnable()
     {
         _resourceScaner.ResourcesFound += UpdateResourcesOnMap;
+        _resourceCollector.Collected += IncreaseResourceCount;
     }
 
     private void OnDisable()
     {
         _resourceScaner.ResourcesFound -= UpdateResourcesOnMap;
+        _resourceCollector.Collected -= IncreaseResourceCount;
     }
 
     private void UpdateResourcesOnMap(List<Resource> resources)
@@ -30,10 +38,17 @@ public class Base : MonoBehaviour
         _resourcesOnMap = resources;
     }
 
+    private void IncreaseResourceCount(Resource resource)
+    {
+        _resourcesOnMap.Remove(resource);
+        _resources++;
+    }
+
     private void SendBotForGatheringResource(Resource resource)
     {
         if (TryGetIdleBot(out Bot bot))
         {
+            resource.MarkForGathering();
             bot.SendForGatheringResource(resource, transform);
         }
     }
@@ -42,9 +57,9 @@ public class Base : MonoBehaviour
     {
         bot = null;
 
-        foreach(var tempBot  in _bots) 
+        foreach (var tempBot in _bots)
         {
-            if(tempBot.State == BotState.Idle)
+            if (tempBot.State == BotState.Idle)
             {
                 bot = tempBot;
                 return true;
@@ -53,4 +68,21 @@ public class Base : MonoBehaviour
 
         return false;
     }
+
+    private bool TryGetResourceOnGround(out Resource resource)
+    {
+        resource = null;
+
+        foreach(var tempResource in _resourcesOnMap)
+        {
+            if(tempResource.State == ResourceState.Grounded)
+            {
+                resource = tempResource;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

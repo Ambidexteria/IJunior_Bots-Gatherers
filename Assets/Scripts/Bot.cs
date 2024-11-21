@@ -24,11 +24,26 @@ public class Bot : MonoBehaviour
 
     public BotState State => _state;
 
+    private void OnEnable()
+    {
+        _actionController.ActionCompleted += SetIdleState;
+    }
+
+    private void OnDisable()
+    {
+        _actionController.ActionCompleted -= SetIdleState;
+    }
+
     public void SendForGatheringResource(Resource resource, Transform basePositon)
     {
         ChainOfActions chainOfActions = CreateGatheringResourcesChainOfActions(resource, basePositon);
         _actionController.SetChainOfActions(chainOfActions);
         _state = BotState.Gathering;
+    }
+
+    private void SetIdleState()
+    {
+        _state = BotState.Idle;
     }
 
     private ChainOfActions CreateGatheringResourcesChainOfActions(Resource resource, Transform basePosition)
@@ -37,7 +52,8 @@ public class Bot : MonoBehaviour
         {
             new ActionMoveToTarget(_moverToTarget, resource.transform),
             new ActionTakeResource(resource, _resourcePosition),
-            new ActionMoveToTarget(_moverToTarget, basePosition)
+            new ActionMoveToTarget(_moverToTarget, basePosition),
+            new ActionUnloadResource(resource)
         };
 
         return new ChainOfActions(actions);
