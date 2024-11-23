@@ -5,21 +5,22 @@ using UnityEngine;
 public class ActionTakeResource : IUnitAction
 {
     private Resource _resource;
-    private Transform _transportingPosition;
+    private Transform _transportingPoint;
 
-    public ActionTakeResource(Resource resourceTransform, Transform transportingPosition)
+    public ActionTakeResource(Resource resourceTransform, Transform transportingPoint)
     {
         _resource = resourceTransform;
-        _transportingPosition = transportingPosition;
+        _transportingPoint = transportingPoint;
     }
 
     public event Action Completed;
 
     public IEnumerator Launch()
     {
-        _resource.transform.SetParent(_transportingPosition);
+        _resource.transform.SetParent(_transportingPoint, true);
         _resource.Take();
-        _resource.transform.SetLocalPositionAndRotation(_transportingPosition.localPosition, _transportingPosition.localRotation);
+        _resource.transform.position = _transportingPoint.position;
+        _resource.ResetRotationAndScale();
 
         yield return null;
 

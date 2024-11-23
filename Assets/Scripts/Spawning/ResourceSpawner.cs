@@ -33,6 +33,7 @@ public class ResourceSpawner : GenericSpawner<Resource>
     public override void Despawn(Resource type)
     {
         _resourcesOnMap.Remove(type);
+        type.ResetRotationAndScale();
         ReturnToPool(type);
     }
 

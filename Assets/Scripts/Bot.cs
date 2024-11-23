@@ -23,9 +23,9 @@ public class Bot : MonoBehaviour
         _actionController.ActionCompleted -= SetIdleState;
     }
 
-    public void SendForGatheringResource(Resource resource, Transform basePositon)
+    public void SendForGatheringResource(Resource resource, Transform resourceDropPosition)
     {
-        _chain = CreateGatheringResourcesChainOfActions(resource, basePositon);
+        _chain = CreateGatheringResourcesChainOfActions(resource, resourceDropPosition);
         _actionController.SetChainOfActions(_chain);
         _state = BotState.Gathering;
     }

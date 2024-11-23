@@ -7,6 +7,7 @@ public class MoverToTarget : MonoBehaviour
     [SerializeField] private float _speed;
     [SerializeField] private float _minPositionToTarget = 0.5f;
     [SerializeField] private Transform _target;
+    [SerializeField] private GroundOrientator _groundOrientator;
 
     private Coroutine _coroutine;
 
@@ -14,7 +15,6 @@ public class MoverToTarget : MonoBehaviour
 
     public void Launch()
     {
-        //Move();
         _coroutine = StartCoroutine(Move());
     }
 
@@ -30,6 +30,9 @@ public class MoverToTarget : MonoBehaviour
         while (IsTargetReached() == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
+            _groundOrientator.Orientate();
+            transform.LookAt(_target, Vector3.up);
+            transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
 
             yield return null;
         }

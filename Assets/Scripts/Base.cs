@@ -59,7 +59,7 @@ public class Base : MonoBehaviour
     private void SendBotForGatheringResource(Bot bot, Resource resource)
     {
         resource.MarkForGathering();
-        bot.SendForGatheringResource(resource, transform);
+        bot.SendForGatheringResource(resource, _resourceCollector.transform);
     }
 
     private bool TryGetIdleBot(out Bot bot)
