@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ResourceSpawner : GenericSpawner<Resource>
 {
-    [SerializeField] private SpawnZone _spawnZone;
+    [SerializeField] private SpawnZone3D _spawnZone;
     [SerializeField] private ResourceCollector _collector;
     [SerializeField] private float _spawnCooldown = 5f;
     [SerializeField] private int _maxResourcesOnMap = 20;

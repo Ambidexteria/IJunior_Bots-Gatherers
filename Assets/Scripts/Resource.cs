@@ -1,14 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public enum ResourceState
-{
-    Grounded,
-    MarkedForGathering,
-    Taken
-}
 
 [RequireComponent(typeof(Collider))]
 public class Resource : SpawnableObject

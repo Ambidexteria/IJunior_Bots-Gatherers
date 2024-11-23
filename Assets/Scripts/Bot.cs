@@ -1,15 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-
-public enum BotState
-{
-    Idle,
-    Gathering,
-    Working
-}
 
 public class Bot : MonoBehaviour
 {
@@ -17,10 +8,8 @@ public class Bot : MonoBehaviour
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
 
-    private bool _isActive = true;
     private BotState _state = BotState.Idle;
-
-    public event Action CommandCompleted;
+    private ChainOfActions _chain;
 
     public BotState State => _state;
 
@@ -36,8 +25,8 @@ public class Bot : MonoBehaviour
 
     public void SendForGatheringResource(Resource resource, Transform basePositon)
     {
-        ChainOfActions chainOfActions = CreateGatheringResourcesChainOfActions(resource, basePositon);
-        _actionController.SetChainOfActions(chainOfActions);
+        _chain = CreateGatheringResourcesChainOfActions(resource, basePositon);
+        _actionController.SetChainOfActions(_chain);
         _state = BotState.Gathering;
     }
 

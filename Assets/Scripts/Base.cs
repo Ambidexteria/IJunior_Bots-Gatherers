@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,18 +6,17 @@ public class Base : MonoBehaviour
 {
     [SerializeField] private Bot[] _bots;
     [SerializeField] private List<Resource> _resourcesOnMap;
-    [SerializeField] private int _resources;
+    [SerializeField] private int _resourcesCount;
     [SerializeField] private ResourceScaner _resourceScaner;
     [SerializeField] private ResourceCollector _resourceCollector;
+
+    public event Action<int> ResourcesCountChanged;
 
     private void Update()
     {
         if (_resourcesOnMap.Count > 0)
         {
-            if (TryGetResourceOnGround(out Resource resource))
-            {
-                SendBotForGatheringResource(resource);
-            }
+            GatherResources();
         }
     }
 
@@ -33,6 +32,17 @@ public class Base : MonoBehaviour
         _resourceCollector.Collected -= IncreaseResourceCount;
     }
 
+    private void GatherResources()
+    {
+        if (TryGetIdleBot(out Bot idleBot))
+        {
+            if (TryGetNearestResourceOnGround(out Resource resource))
+            {
+                SendBotForGatheringResource(idleBot, resource);
+            }
+        }
+    }
+
     private void UpdateResourcesOnMap(List<Resource> resources)
     {
         _resourcesOnMap = resources;
@@ -41,16 +51,15 @@ public class Base : MonoBehaviour
     private void IncreaseResourceCount(Resource resource)
     {
         _resourcesOnMap.Remove(resource);
-        _resources++;
+        _resourcesCount++;
+        
+        ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 
-    private void SendBotForGatheringResource(Resource resource)
+    private void SendBotForGatheringResource(Bot bot, Resource resource)
     {
-        if (TryGetIdleBot(out Bot bot))
-        {
-            resource.MarkForGathering();
-            bot.SendForGatheringResource(resource, transform);
-        }
+        resource.MarkForGathering();
+        bot.SendForGatheringResource(resource, transform);
     }
 
     private bool TryGetIdleBot(out Bot bot)
@@ -69,20 +78,45 @@ public class Base : MonoBehaviour
         return false;
     }
 
-    private bool TryGetResourceOnGround(out Resource resource)
+    private bool TryGetNearestResourceOnGround(out Resource nearestResource)
     {
-        resource = null;
+        nearestResource = null;
 
-        foreach(var tempResource in _resourcesOnMap)
+        if(TryGetResourcesOnGround(out List<Resource> resources))
         {
-            if(tempResource.State == ResourceState.Grounded)
+            float minDistance = float.MaxValue;
+            float currentDistance;
+
+            foreach (var tempResource in resources)
             {
-                resource = tempResource;
-                return true;
+                currentDistance = GetDistanceToResource(tempResource);
+
+                if(currentDistance < minDistance)
+                {
+                    minDistance = currentDistance;
+                    nearestResource = tempResource;
+                }
             }
+
+            return true;
         }
 
         return false;
     }
 
+    private bool TryGetResourcesOnGround(out List<Resource> resources)
+    {
+        resources = new();
+
+        foreach(var tempResource in _resourcesOnMap)
+            if (tempResource.State == ResourceState.Grounded)
+                resources.Add(tempResource);
+        
+        return resources.Count > 0;
+    }
+
+    private float GetDistanceToResource(Resource resource)
+    {
+        return Vector3.Distance(resource.transform.position, transform.position);
+    }
 }

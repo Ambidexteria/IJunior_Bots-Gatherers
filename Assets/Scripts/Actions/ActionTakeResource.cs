@@ -1,27 +1,25 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ActionTakeResource : IUnitAction
 {
     private Resource _resource;
-    private Transform _parent;
+    private Transform _transportingPosition;
 
-    public ActionTakeResource(Resource resourceTransform, Transform parent)
+    public ActionTakeResource(Resource resourceTransform, Transform transportingPosition)
     {
         _resource = resourceTransform;
-        _parent = parent;
+        _transportingPosition = transportingPosition;
     }
 
     public event Action Completed;
 
     public IEnumerator Launch()
     {
-        Debug.Log("Take resource");
-        _resource.transform.SetParent(_parent);
+        _resource.transform.SetParent(_transportingPosition);
         _resource.Take();
-        _resource.transform.SetLocalPositionAndRotation(_parent.localPosition, _parent.localRotation);
+        _resource.transform.SetLocalPositionAndRotation(_transportingPosition.localPosition, _transportingPosition.localRotation);
 
         yield return null;
 

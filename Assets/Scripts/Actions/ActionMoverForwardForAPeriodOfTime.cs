@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class ActionMoverForwardForAPeriodOfTime : IUnitAction
 {
@@ -26,7 +24,6 @@ public class ActionMoverForwardForAPeriodOfTime : IUnitAction
 
     private void InvokeCompletedEvent()
     {
-        Debug.Log("Invoke Completed Event");
         Completed?.Invoke();
     }
 }
