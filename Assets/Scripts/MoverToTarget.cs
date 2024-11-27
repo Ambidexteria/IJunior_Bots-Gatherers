@@ -1,13 +1,15 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using DG.Tweening;
 
+[RequireComponent(typeof(Rigidbody))]
 public class MoverToTarget : MonoBehaviour
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _minPositionToTarget = 0.5f;
     [SerializeField] private Transform _target;
-    [SerializeField] private GroundOrientator _groundOrientator;
+    [SerializeField] private Transform _forwardPoint;
 
     private Coroutine _coroutine;
 
@@ -25,14 +27,10 @@ public class MoverToTarget : MonoBehaviour
 
     private IEnumerator Move()
     {
-        Vector3 temp = transform.position;
-
         while (IsTargetReached() == false)
         {
-            transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
-            _groundOrientator.Orientate();
-            transform.LookAt(_target, Vector3.up);
-            transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
+            transform.DOLookAt(_target.position, 0f, AxisConstraint.Y);
+            transform.Translate((_speed * Time.deltaTime) * (_forwardPoint.position - transform.position), Space.World);
 
             yield return null;
         }

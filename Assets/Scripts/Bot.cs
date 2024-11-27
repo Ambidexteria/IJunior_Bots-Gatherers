@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
+    [SerializeField] private float _waitTakeResourceTime = 0.5f;
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
@@ -40,6 +41,7 @@ public class Bot : MonoBehaviour
         List<IUnitAction> actions = new List<IUnitAction>
         {
             new ActionMoveToTarget(_moverToTarget, resource.transform),
+            new ActionWaitForAPeriodOfTime(_waitTakeResourceTime),
             new ActionTakeResource(resource, _resourcePosition),
             new ActionMoveToTarget(_moverToTarget, basePosition),
             new ActionUnloadResource(resource)
