@@ -24,22 +24,22 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
 
     public abstract Type Spawn();
 
-    public abstract void Despawn(Type type);
+    public abstract void Despawn(Type spawnableObject);
 
-    public void ReturnToPool(Type spawnedObject)
+    public void ReturnToPool(Type spawnableObject)
     {
-        PrepareToDeactivate(spawnedObject);
-        _pool.Release(spawnedObject);
+        PrepareToDeactivate(spawnableObject);
+        _pool.Release(spawnableObject);
     }
 
     public Type GetNextObject()
     {
-        Type type = _pool.Get();
+        Type nextObject = _pool.Get();
 
-        return type;
+        return nextObject;
     }
 
-    public virtual void PrepareToDeactivate(Type spawnedObject) { }
+    public virtual void PrepareToDeactivate(Type spawnableObject) { }
 
     private Type PrepareForSpawn(Type spawnedObject)
     {
@@ -50,9 +50,9 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
     {
         _pool = new ObjectPool<Type>(
             createFunc: () => Create(),
-            actionOnGet: (spawnedObject) => PrepareForSpawn(spawnedObject),
-            actionOnRelease: (spawnedObject) => spawnedObject.gameObject.SetActive(false),
-            actionOnDestroy: (spawnedObject) => Destroy(spawnedObject.gameObject),
+            actionOnGet: (spawnableObject) => PrepareForSpawn(spawnableObject),
+            actionOnRelease: (spawnableObject) => spawnableObject.gameObject.SetActive(false),
+            actionOnDestroy: (spawnableObject) => Destroy(spawnableObject.gameObject),
             defaultCapacity: _poolDefaultCapacity,
             maxSize: _poolMaxSize
             );

@@ -6,7 +6,6 @@ public class ResourceSpawner : GenericSpawner<Resource>
 {
     [SerializeField] private string _objectName;
     [SerializeField] private SpawnZone3D _spawnZone;
-    [SerializeField] private ResourceCollector _collector;
     [SerializeField] private float _spawnCooldown = 5f;
     [SerializeField] private int _maxResourcesOnMap = 20;
 
@@ -14,16 +13,6 @@ public class ResourceSpawner : GenericSpawner<Resource>
     private List<Resource> _resourcesOnMap;
 
     private int _resourceNumber = 0;
-
-    private void OnEnable()
-    {
-        _collector.Collected += Despawn;
-    }
-
-    private void OnDisable()
-    {
-        _collector.Collected -= Despawn;
-    }
 
     public override void PrepareOnAwake()
     {
@@ -33,23 +22,27 @@ public class ResourceSpawner : GenericSpawner<Resource>
         StartCoroutine(LaunchSpawnCoroutine());
     }
 
-    public override void Despawn(Resource type)
+    public override void Despawn(Resource resource)
     {
-        _resourcesOnMap.Remove(type);
-        type.ResetRotationAndScale();
-        ReturnToPool(type);
+        resource.ResetRotationAndScale();
+        resource.CollisionHandler.Collected -= Despawn;
+
+        _resourcesOnMap.Remove(resource);
+        ReturnToPool(resource);
     }
 
     public override Resource Spawn()
     {
         Resource resource = GetNextObject();
+
         resource.transform.position = _spawnZone.GetRandomSpawnPositionOnPlaneWithVerticalOffset();
+        resource.CollisionHandler.Collected += Despawn;
         resource.Drop();
         resource.gameObject.SetActive(true);
-        _resourcesOnMap.Add(resource);
-
-        _resourceNumber++;
         resource.gameObject.name = _objectName + "_" + _resourceNumber;
+
+        _resourcesOnMap.Add(resource);
+        _resourceNumber++;
 
         return resource;
     }

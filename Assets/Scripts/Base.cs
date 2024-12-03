@@ -12,7 +12,6 @@ public class Base : MonoBehaviour
 
     public event Action<int> ResourcesCountChanged;
 
-    public ResourceCollector ResourceCollector => _resourceCollector;
     public ResourceScaner ResourceScaner => _resourceScaner;
 
     private void OnEnable()
@@ -38,7 +37,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void IncreaseResourceCount(Resource resource)
+    private void IncreaseResourceCount()
     {
         _resourcesCount++;
 

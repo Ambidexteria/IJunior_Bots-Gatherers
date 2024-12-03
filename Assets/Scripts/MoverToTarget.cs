@@ -33,28 +33,26 @@ public class MoverToTarget : MonoBehaviour
 
     private IEnumerator Move()
     {
-        
+        Vector3 direction;
 
         while (IsTargetReached() == false)
         {
+            direction = _forwardPoint.position - transform.position;
+
             transform.DOLookAt(_target.position, 0f, AxisConstraint.Y);
-            transform.Translate(_speed * Time.deltaTime * (_forwardPoint.position - transform.position), Space.World);
+            transform.Translate(direction * _speed * Time.deltaTime, Space.World);
 
             yield return null;
         }
-
-        Debug.Log("Moving completed");
     }
 
     private bool IsTargetReached()
     {
         float distanceToTarget = (transform.position - _target.position).sqrMagnitude;
-        //Debug.Log($"distance to target - {distanceToTarget}, minTargetPosition - {_minPositionToTarget}");
 
         if (distanceToTarget < _minPositionToTarget)
         {
             TargetReached?.Invoke();
-            Debug.Log(nameof(IsTargetReached));
             _target = null;
             return true;
         }

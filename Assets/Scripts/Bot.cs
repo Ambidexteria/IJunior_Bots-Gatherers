@@ -39,10 +39,6 @@ public class Bot : MonoBehaviour
 
     private ChainOfActions CreateGatheringResourcesChainOfActions(Resource resource, Transform basePosition)
     {
-        Debug.Log(nameof(CreateGatheringResourcesChainOfActions));  
-        Debug.Log(resource.gameObject.name);  
-        Debug.Log(resource.transform.position);  
-
         List<IUnitAction> actions = new List<IUnitAction>
         {
             new ActionMoveToTarget(_moverToTarget, resource.transform),

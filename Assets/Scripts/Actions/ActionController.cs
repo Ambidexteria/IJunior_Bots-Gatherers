@@ -46,9 +46,6 @@ public class ActionController : MonoBehaviour
         }
 
         _currentAction = _actions[_actionNumber];
-
-        Debug.Log("Current Action - " + _currentAction.GetType().Name);
-
         _launchedActionCoroutine = StartCoroutine(_currentAction.Launch());
         _currentAction.Completed += SetNextAction;
 
