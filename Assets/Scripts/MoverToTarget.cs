@@ -20,6 +20,12 @@ public class MoverToTarget : MonoBehaviour
         _coroutine = StartCoroutine(Move());
     }
 
+    public void Stop()
+    {
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
+    }
+
     public void SetTarget(Transform target)
     {
         _target = target;
@@ -27,24 +33,29 @@ public class MoverToTarget : MonoBehaviour
 
     private IEnumerator Move()
     {
+        
+
         while (IsTargetReached() == false)
         {
             transform.DOLookAt(_target.position, 0f, AxisConstraint.Y);
-            transform.Translate((_speed * Time.deltaTime) * (_forwardPoint.position - transform.position), Space.World);
+            transform.Translate(_speed * Time.deltaTime * (_forwardPoint.position - transform.position), Space.World);
 
             yield return null;
         }
 
-        StopCoroutine(_coroutine);
+        Debug.Log("Moving completed");
     }
 
     private bool IsTargetReached()
     {
-        float distanceToTarget = Vector3.Distance(transform.position, _target.position);
+        float distanceToTarget = (transform.position - _target.position).sqrMagnitude;
+        //Debug.Log($"distance to target - {distanceToTarget}, minTargetPosition - {_minPositionToTarget}");
 
         if (distanceToTarget < _minPositionToTarget)
         {
             TargetReached?.Invoke();
+            Debug.Log(nameof(IsTargetReached));
+            _target = null;
             return true;
         }
         else

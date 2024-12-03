@@ -11,7 +11,7 @@ public class ResourceScaner : MonoBehaviour
     private WaitForSeconds _waitCooldown;
     private Coroutine _scanCoroutine;
 
-    public event Action<List<Resource>> ResourcesFound;
+    public event Action<List<Resource>, ResourceScaner> ResourcesFound;
 
     private void Awake()
     {
@@ -40,13 +40,13 @@ public class ResourceScaner : MonoBehaviour
 
         foreach (var hit in hits)
         {
-            if (hit.transform.TryGetComponent(out Resource resource))
+            if (hit.transform.TryGetComponent(out Resource resource) && hit.gameObject.activeInHierarchy)
             {
                 resources.Add(resource);
             }
         }
 
         if (resources.Count > 0)
-            ResourcesFound?.Invoke(resources);
+            ResourcesFound?.Invoke(resources, this);
     }
 }

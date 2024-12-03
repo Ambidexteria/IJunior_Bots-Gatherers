@@ -35,7 +35,6 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
     public Type GetNextObject()
     {
         Type type = _pool.Get();
-        type.gameObject.SetActive(true);
 
         return type;
     }
@@ -44,8 +43,6 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
 
     private Type PrepareForSpawn(Type spawnedObject)
     {
-        spawnedObject.gameObject.SetActive(true);
-
         return spawnedObject;
     }
 

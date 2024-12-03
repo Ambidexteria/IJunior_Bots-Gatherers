@@ -17,7 +17,6 @@ public class ActionController : MonoBehaviour
     public void SetChainOfActions(ChainOfActions chainOfActions)
     {
         _actions = chainOfActions.GetActions();
-
         StartChainOfActions();
     }
 
@@ -47,6 +46,9 @@ public class ActionController : MonoBehaviour
         }
 
         _currentAction = _actions[_actionNumber];
+
+        Debug.Log("Current Action - " + _currentAction.GetType().Name);
+
         _launchedActionCoroutine = StartCoroutine(_currentAction.Launch());
         _currentAction.Completed += SetNextAction;
 
@@ -62,7 +64,7 @@ public class ActionController : MonoBehaviour
 
         ActionCompleted?.Invoke();
 
-        if(_loop)
+        if (_loop)
         {
             StartChainOfActions();
         }

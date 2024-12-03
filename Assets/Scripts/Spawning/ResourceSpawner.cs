@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ResourceSpawner : GenericSpawner<Resource>
 {
+    [SerializeField] private string _objectName;
     [SerializeField] private SpawnZone3D _spawnZone;
     [SerializeField] private ResourceCollector _collector;
     [SerializeField] private float _spawnCooldown = 5f;
@@ -11,6 +12,8 @@ public class ResourceSpawner : GenericSpawner<Resource>
 
     private WaitForSeconds _waitCooldown;
     private List<Resource> _resourcesOnMap;
+
+    private int _resourceNumber = 0;
 
     private void OnEnable()
     {
@@ -42,7 +45,11 @@ public class ResourceSpawner : GenericSpawner<Resource>
         Resource resource = GetNextObject();
         resource.transform.position = _spawnZone.GetRandomSpawnPositionOnPlaneWithVerticalOffset();
         resource.Drop();
+        resource.gameObject.SetActive(true);
         _resourcesOnMap.Add(resource);
+
+        _resourceNumber++;
+        resource.gameObject.name = _objectName + "_" + _resourceNumber;
 
         return resource;
     }

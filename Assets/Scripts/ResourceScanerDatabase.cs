@@ -33,6 +33,40 @@ public class ResourceScanerDatabase : MonoBehaviour
         }
     }
 
+    public bool TryGetResourceForGathering(out Resource resource, ResourceScaner scaner)
+    {
+        resource = null;
+
+        if (_resourcesUnmarked.ContainsKey(scaner))
+        {
+            List<Resource> resources = _resourcesUnmarked[scaner];
+
+            if (resources.Count > 0)
+            {
+                Debug.Log(nameof(TryGetResourceForGathering));
+                foreach (var temp in resources)
+                    Debug.Log(temp.gameObject.name);
+
+                resource = GetNearestResource(resources, scaner);
+
+                _resourcesMarkedForGathering.Add(resource);
+                resources.Remove(resource);
+                _resourcesUnmarked[scaner] = resources;
+
+                Debug.Log(nameof(GetNearestResource));
+                Debug.Log(resource.gameObject.name);
+                Debug.Log(resource.transform.position);
+                Debug.Log($"resource.gameobject is enabled - {resource.gameObject.activeSelf}");
+
+                DebugDictionaries();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void InitializeDictionaries()
     {
         _resourcesMarkedForGathering = new();
@@ -48,10 +82,8 @@ public class ResourceScanerDatabase : MonoBehaviour
     {
         if (_resourcesUnmarked.ContainsKey(scaner))
         {
-            resources = resources.Except(_resourcesUnmarked[scaner]).ToList();
+            resources = resources.Except(_resourcesUnmarked[scaner]).Except(_resourcesMarkedForGathering).ToList();
             _resourcesUnmarked[scaner].AddRange(resources);
-
-            //DebugDictionaries();
         }
     }
 
@@ -60,39 +92,14 @@ public class ResourceScanerDatabase : MonoBehaviour
         _resourcesMarkedForGathering.Remove(resource);
     }
 
-    public bool TryGetResourceForGathering(out Resource resource, ResourceScaner scaner)
+    private Resource GetNearestResource(List<Resource> resources, ResourceScaner scaner)
     {
-        resource = null;
-
-        if (_resourcesUnmarked.ContainsKey(scaner))
-        {
-            if (TryGetNearestUnmarkedResource(out resource, _resourcesUnmarked[scaner], scaner))
-            {
-                _resourcesUnmarked[scaner].Remove(resource);
-                _resourcesMarkedForGathering.Add(resource);
-
-                Debug.Log(nameof(TryGetNearestUnmarkedResource));
-                Debug.Log(resource.gameObject.name);
-                Debug.Log(resource.transform.position);
-                Debug.Log($"resource.gameobject is enabled - {resource.gameObject.activeSelf}");
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private bool TryGetNearestUnmarkedResource(out Resource nearestResource, List<Resource> resources, ResourceScaner scaner)
-    {
-        DebugDictionaries();
-
-        nearestResource = null;
-
-        resources = GetActivedResources(resources);
-
         if (resources.Count == 0)
-            return false;
+            throw new System.ArgumentOutOfRangeException();
+
+        Resource nearestResource = null;
+
+        resources = GetActiveResources(resources);
 
         float minDistance = float.MaxValue;
         float currentDistance;
@@ -108,10 +115,10 @@ public class ResourceScanerDatabase : MonoBehaviour
             }
         }
 
-        return true;
+        return nearestResource;
     }
 
-    private List<Resource> GetActivedResources(List<Resource> resources)
+    private List<Resource> GetActiveResources(List<Resource> resources)
     {
         return resources.Where(x => x.gameObject.activeSelf).ToList();
     }

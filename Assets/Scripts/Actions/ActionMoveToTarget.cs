@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using UnityEngine;
 
 public class ActionMoveToTarget : IUnitAction
@@ -17,9 +18,13 @@ public class ActionMoveToTarget : IUnitAction
 
     public IEnumerator Launch()
     {
+
         _mover.TargetReached += InvokeCompletedEvent;
         _mover.SetTarget(_target);
         _mover.Launch();
+
+        if (Vector3.Distance(_mover.transform.position, _target.transform.position) < 2f)
+            throw new Exception();
 
         yield return null;
     }
@@ -27,6 +32,7 @@ public class ActionMoveToTarget : IUnitAction
     private void InvokeCompletedEvent()
     {
         _mover.TargetReached -= InvokeCompletedEvent;
+        _mover.Stop();
         Completed?.Invoke();
     }
 }

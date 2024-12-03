@@ -5,6 +5,7 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [SerializeField] private float _waitTakeResourceTime = 0.5f;
+    [SerializeField] private float _waitAfterCompletedChainOfActions = 0.1f;
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
@@ -38,13 +39,18 @@ public class Bot : MonoBehaviour
 
     private ChainOfActions CreateGatheringResourcesChainOfActions(Resource resource, Transform basePosition)
     {
+        Debug.Log(nameof(CreateGatheringResourcesChainOfActions));  
+        Debug.Log(resource.gameObject.name);  
+        Debug.Log(resource.transform.position);  
+
         List<IUnitAction> actions = new List<IUnitAction>
         {
             new ActionMoveToTarget(_moverToTarget, resource.transform),
             new ActionWaitForAPeriodOfTime(_waitTakeResourceTime),
             new ActionTakeResource(resource, _resourcePosition),
             new ActionMoveToTarget(_moverToTarget, basePosition),
-            new ActionUnloadResource(resource)
+            new ActionUnloadResource(resource),
+            new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
         };
 
         return new ChainOfActions(actions);
