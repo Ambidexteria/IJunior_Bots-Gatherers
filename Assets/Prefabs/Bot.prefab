@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 6754882402976440507}
   - component: {fileID: 3515641225223328178}
   - component: {fileID: 9185947095665318426}
-  - component: {fileID: 4218565290319717989}
   m_Layer: 0
   m_Name: Eye (1)
   m_TagString: Untagged
@@ -115,27 +114,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4218565290319717989
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3063933922020284658}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3267617371751365228
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +356,6 @@ GameObject:
   - component: {fileID: 4714784938054059500}
   - component: {fileID: 2478256958436209464}
   - component: {fileID: 8527747843185570361}
-  - component: {fileID: 4144371962932806508}
   m_Layer: 0
   m_Name: Eye
   m_TagString: Untagged
@@ -451,27 +428,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &4144371962932806508
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7211075329463443249}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7684276613372631395
 GameObject:
   m_ObjectHideFlags: 0
