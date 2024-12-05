@@ -1,96 +1,61 @@
-using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ResourceScanerDatabase : MonoBehaviour
 {
-    [SerializeField] private List<Base> _bases;
+    [SerializeField] private ResourceScaner _scaner;
 
     private List<Resource> _resourcesMarkedForGathering = new();
-    private Dictionary<ResourceScaner, List<Resource>> _resourcesUnmarked;
-
-    private void Awake()
-    {
-        InitializeDictionaries();
-    }
+    private List<Resource> _resourcesUnmarked = new();
 
     private void OnEnable()
     {
-        foreach (var baseBuilding in _bases)
-        {
-            baseBuilding.ResourceScaner.ResourcesFound += UpdateResources;
-        }
+        _scaner.ResourcesFound += UpdateResources;
     }
 
     private void OnDisable()
     {
-        foreach (var baseBuilding in _bases)
-        {
-            baseBuilding.ResourceScaner.ResourcesFound -= UpdateResources;
-        }
+        _scaner.ResourcesFound -= UpdateResources;
     }
 
-    public bool TryGetResourceForGathering(out Resource resource, ResourceScaner scaner)
+    public bool TryGetNearestResourceForGathering(out Resource resource, Vector3 currentPosition)
     {
         resource = null;
 
-        if (_resourcesUnmarked.ContainsKey(scaner))
+        if (_resourcesUnmarked.Count > 0)
         {
-            List<Resource> resources = _resourcesUnmarked[scaner];
+            resource = GetResourceNearestToPosition(currentPosition);
+            resource.Collected += DeleteCollectedResource;
 
-            if (resources.Count > 0)
-            {
-                resource = GetNearestResource(resources, scaner);
-                resource.CollisionHandler.Collected += DeleteCollectedResource;
+            _resourcesMarkedForGathering.Add(resource);
+            _resourcesUnmarked.Remove(resource);
 
-                _resourcesMarkedForGathering.Add(resource);
-                resources.Remove(resource);
-                _resourcesUnmarked[scaner] = resources;
-
-                return true;
-            }
+            return true;
         }
 
         return false;
     }
 
-    private Resource GetNearestResource(List<Resource> resources, ResourceScaner scaner)
+    private Resource GetResourceNearestToPosition(Vector3 currentPosition)
     {
-        if (resources.Count == 0)
-            throw new System.ArgumentOutOfRangeException();
-
-        return resources.Where(x => x.gameObject.activeSelf).OrderBy(x => GetDistanceToResource(x, scaner)).ToList().First();
+        return _resourcesUnmarked.Where(x => x.gameObject.activeSelf).OrderBy(x => GetDistanceToResource(x, currentPosition)).ToList().First();
     }
 
-    private float GetDistanceToResource(Resource resource, ResourceScaner scaner)
+    private float GetDistanceToResource(Resource resource, Vector3 currentPosition)
     {
-        return (resource.transform.position - scaner.transform.position).sqrMagnitude;
+        return (resource.transform.position - currentPosition).sqrMagnitude;
     }
 
-    private void InitializeDictionaries()
+    private void UpdateResources(List<Resource> resources)
     {
-        _resourcesMarkedForGathering = new();
-        _resourcesUnmarked = new();
-
-        foreach (var baseBulding in _bases)
-        {
-            _resourcesUnmarked.Add(baseBulding.ResourceScaner, new List<Resource>());
-        }
-    }
-
-    private void UpdateResources(List<Resource> resources, ResourceScaner scaner)
-    {
-        if (_resourcesUnmarked.ContainsKey(scaner))
-        {
-            resources = resources.Except(_resourcesUnmarked[scaner]).Except(_resourcesMarkedForGathering).ToList();
-            _resourcesUnmarked[scaner].AddRange(resources);
-        }
+        resources = resources.Except(_resourcesUnmarked).Except(_resourcesMarkedForGathering).ToList();
+        _resourcesUnmarked.AddRange(resources);
     }
 
     private void DeleteCollectedResource(Resource resource)
     {
         _resourcesMarkedForGathering.Remove(resource);
-        resource.CollisionHandler.Collected -= DeleteCollectedResource;
+        resource.Collected -= DeleteCollectedResource;
     }
 }

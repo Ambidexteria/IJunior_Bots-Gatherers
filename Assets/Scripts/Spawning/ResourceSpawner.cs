@@ -25,7 +25,7 @@ public class ResourceSpawner : GenericSpawner<Resource>
     public override void Despawn(Resource resource)
     {
         resource.ResetRotationAndScale();
-        resource.CollisionHandler.Collected -= Despawn;
+        resource.Collected -= Despawn;
 
         _resourcesOnMap.Remove(resource);
         ReturnToPool(resource);
@@ -36,7 +36,7 @@ public class ResourceSpawner : GenericSpawner<Resource>
         Resource resource = GetNextObject();
 
         resource.transform.position = _spawnZone.GetRandomSpawnPositionOnPlaneWithVerticalOffset();
-        resource.CollisionHandler.Collected += Despawn;
+        resource.Collected += Despawn;
         resource.Drop();
         resource.gameObject.SetActive(true);
         resource.gameObject.name = _objectName + "_" + _resourceNumber;

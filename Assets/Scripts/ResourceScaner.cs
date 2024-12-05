@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ResourceScaner : MonoBehaviour
 {
-    private const string _resourceLayerName = "Resources";
+    private const string ResourceLayerName = "Resources";
 
     [SerializeField] private float _range;
     [SerializeField] private float _cooldown;
@@ -14,12 +14,12 @@ public class ResourceScaner : MonoBehaviour
     private Coroutine _scanCoroutine;
     private int _resourceLayerMask;
 
-    public event Action<List<Resource>, ResourceScaner> ResourcesFound;
+    public event Action<List<Resource>> ResourcesFound;
 
     private void Awake()
     {
         _waitCooldown = new WaitForSeconds(_cooldown);
-        _resourceLayerMask = LayerMask.GetMask(_resourceLayerName);
+        _resourceLayerMask = LayerMask.GetMask(ResourceLayerName);
     }
 
     private void OnEnable()
@@ -51,6 +51,6 @@ public class ResourceScaner : MonoBehaviour
         }
 
         if (resources.Count > 0)
-            ResourcesFound?.Invoke(resources, this);
+            ResourcesFound?.Invoke(resources);
     }
 }
