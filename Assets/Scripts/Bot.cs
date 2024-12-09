@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bot : MonoBehaviour
+public class Bot : SpawnableObject
 {
     [SerializeField] private float _waitTakeResourceTime = 0.5f;
     [SerializeField] private float _waitAfterCompletedChainOfActions = 0.1f;

@@ -155,6 +155,7 @@ Transform:
   m_Children:
   - {fileID: 1398609635}
   - {fileID: 1518145687}
+  - {fileID: 2107662804}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &105960116
@@ -173,9 +174,13 @@ MonoBehaviour:
   - {fileID: 1106443265}
   - {fileID: 2137367353}
   - {fileID: 1251576368}
+  _maxBots: 5
   _resourcesCount: 0
   _resourceCollector: {fileID: 1518145689}
   _resourceScanerDatabase: {fileID: 1990815504}
+  _botSpawner: {fileID: 1972776526}
+  _botSpawnPosition: {fileID: 2107662804}
+  _botPrice: 3
 --- !u!114 &105960117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1303,6 +1308,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1275830114}
+  - {fileID: 1972776525}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1106443265 stripped
@@ -1795,6 +1801,53 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1972776524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1972776525}
+  - component: {fileID: 1972776526}
+  m_Layer: 0
+  m_Name: BotSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1972776525
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972776524}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1079501777}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1972776526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972776524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf3b44efb2965b84586b1dd969738ac3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefab: {fileID: 6643892426415902303, guid: 9d968dc8206e7b24c86aed54587fc25f, type: 3}
+  _poolDefaultCapacity: 10
+  _poolMaxSize: 50
 --- !u!1 &1990815503
 GameObject:
   m_ObjectHideFlags: 0
@@ -1917,6 +1970,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _base: {fileID: 105960116}
   _resourcesCountText: {fileID: 132967545}
+--- !u!1 &2107662803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2107662804}
+  m_Layer: 0
+  m_Name: BotSpawnPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2107662804
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2107662803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.619, z: -2.503}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 105960114}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2137367353 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6643892426415902303, guid: 9d968dc8206e7b24c86aed54587fc25f, type: 3}
