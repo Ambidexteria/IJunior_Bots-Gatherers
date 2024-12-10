@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Base : MonoBehaviour
+public class MainBuilding : MonoBehaviour
 {
     [SerializeField] private List<Bot> _bots;
     [SerializeField] private int _maxBots;
@@ -12,12 +12,39 @@ public class Base : MonoBehaviour
     [SerializeField] private BotSpawner _botSpawner;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private int _botPrice = 3;
+    [SerializeField] private int _mainBuildingPrice = 3;
+    [SerializeField] private MainBuildingFlag _mainBuildingFlag;
 
     public event Action<int> ResourcesCountChanged;
+    public event Action<Vector3> ConstructionFlagSet;
+
+    public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingPrice;
+    public bool IsBotCanBeCreated => _resourcesCount >= _botPrice && _bots.Count < _maxBots;
 
     private void Update()
     {
         GatherResources();
+    }
+
+    public void SetFlagForConstructionNewBase(Vector3 placePosition)
+    {
+        ConstructionFlagSet?.Invoke(placePosition);
+        _mainBuildingFlag.Place(placePosition);
+    }
+
+    public void CreateNewBot()
+    {
+        Bot newBot = _botSpawner.Spawn();
+        _bots.Add(newBot);
+        newBot.transform.position = _botSpawnPosition.position;
+
+        _resourcesCount -= _botPrice;
+        ResourcesCountChanged?.Invoke(_resourcesCount);
+    }
+
+    public void SendBotForConstruction()
+    {
+
     }
 
     private void GatherResources()
@@ -32,24 +59,6 @@ public class Base : MonoBehaviour
     {
         _resourcesCount++;
         resource.Collected -= Collect;
-        ResourcesCountChanged?.Invoke(_resourcesCount);
-        
-        if(IsBotCanBeCreated())
-            CreateNewBot();
-    }
-
-    private bool IsBotCanBeCreated()
-    {
-        return _resourcesCount >= _botPrice && _bots.Count < _maxBots;
-    }
-
-    private void CreateNewBot()
-    {
-        Bot newBot = _botSpawner.Spawn();
-        _bots.Add(newBot);
-        newBot.transform.position = _botSpawnPosition.position;
-
-        _resourcesCount -= _botPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 

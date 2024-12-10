@@ -3,7 +3,7 @@ using TMPro;
 
 public class ResourcesCountVeiwer : MonoBehaviour
 {
-    [SerializeField] private Base _base;
+    [SerializeField] private MainBuilding _base;
     [SerializeField] private TextMeshProUGUI _resourcesCountText;
 
     private void OnEnable()
