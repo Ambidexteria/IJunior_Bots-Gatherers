@@ -42,9 +42,17 @@ public class MainBuilding : MonoBehaviour
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 
-    public void SendBotForConstruction()
+    public bool TrySendBotForConstruction()
     {
-
+        if (TryGetIdleBot(out Bot idleBot))
+        {
+            SendBotForConstruction(idleBot);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void GatherResources()
@@ -69,6 +77,13 @@ public class MainBuilding : MonoBehaviour
             bot.SendForGatheringResource(resource, _resourceCollector.transform);
             resource.Collected += Collect;
         }
+    }
+
+    private void SendBotForConstruction(Bot bot)
+    {
+        bot.SendForConstruction(_mainBuildingFlag);
+        _resourcesCount -= _mainBuildingPrice;
+        ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 
     private bool TryGetIdleBot(out Bot bot)

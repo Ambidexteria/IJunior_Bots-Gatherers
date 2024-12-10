@@ -32,6 +32,13 @@ public class Bot : SpawnableObject
         _state = BotState.Gathering;
     }
 
+    public void SendForConstruction(MainBuildingFlag flag)
+    {
+        _chain = CreateConstructionChainOfActions(flag);
+        _actionController.SetChainOfActions(_chain);
+        _state = BotState.Working;
+    }
+
     private void SetIdleState()
     {
         _state = BotState.Idle;
@@ -46,6 +53,18 @@ public class Bot : SpawnableObject
             new ActionTakeResource(resource, _resourcePosition),
             new ActionMoveToTarget(_moverToTarget, basePosition),
             new ActionUnloadResource(resource),
+            new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
+        };
+
+        return new ChainOfActions(actions);
+    }
+
+    private ChainOfActions CreateConstructionChainOfActions(MainBuildingFlag flag)
+    {
+        List<IUnitAction> actions = new List<IUnitAction>
+        {
+            new ActionMoveToTarget(_moverToTarget, flag.transform),
+            new ActionWaitForAPeriodOfTime(_waitTakeResourceTime),
             new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
         };
 

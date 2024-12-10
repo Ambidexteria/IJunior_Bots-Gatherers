@@ -156,6 +156,7 @@ MonoBehaviour:
     m_Bits: 512
   _mainBuildingPicker: {fileID: 807605724}
   _mainCamera: {fileID: 963194227}
+  _playerInput: {fileID: 0}
 --- !u!4 &2334550
 Transform:
   m_ObjectHideFlags: 0
@@ -257,7 +258,7 @@ MonoBehaviour:
   _botSpawner: {fileID: 1972776526}
   _botSpawnPosition: {fileID: 2107662804}
   _botPrice: 3
-  _mainBuildingPrice: 20
+  _mainBuildingPrice: 10
   _mainBuildingFlag: {fileID: 1833818500}
 --- !u!1 &132967543
 GameObject:
@@ -959,6 +960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 120c08853bd405644885d025a03c1bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canceledActionButton: 0
 --- !u!4 &704413415
 Transform:
   m_ObjectHideFlags: 0

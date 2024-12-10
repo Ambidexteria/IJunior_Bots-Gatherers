@@ -3,8 +3,8 @@ using System;
 public class MainBuildingConstructingNewBase : IBuildingState
 {
     private MainBuilding _building;
-    public MainBuildingConstructingNewBase(MainBuilding mainBuilding) 
-    { 
+    public MainBuildingConstructingNewBase(MainBuilding mainBuilding)
+    {
         _building = mainBuilding;
     }
 
@@ -20,10 +20,12 @@ public class MainBuildingConstructingNewBase : IBuildingState
 
     public void OnUpdate()
     {
-        if(_building.IsResourcesEnoughForConstructionNewMainBuilding)
+        if (_building.IsResourcesEnoughForConstructionNewMainBuilding)
         {
-            _building.SendBotForConstruction();
-            ConstructionCompleted?.Invoke();
+            if (_building.TrySendBotForConstruction())
+            {
+                ConstructionCompleted?.Invoke();
+            }
         }
     }
 }

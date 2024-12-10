@@ -8,6 +8,7 @@ public class ConstructionPoint : MonoBehaviour
     [SerializeField] private LayerMask _mask;
     [SerializeField] private MainBuildingPicker _mainBuildingPicker;
     [SerializeField] private Camera _mainCamera;
+    [SerializeField] private PlayerInput _playerInput;
 
     private void OnEnable()
     {
