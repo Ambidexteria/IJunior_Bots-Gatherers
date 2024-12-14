@@ -613,9 +613,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _waitTakeResourceTime: 0.5
   _waitAfterCompletedChainOfActions: 0.1
+  _waitConstructionTime: 5
   _moverToTarget: {fileID: 283496080637581178}
   _resourcePosition: {fileID: 1581159077690027534}
   _actionController: {fileID: 5749486471142288027}
+  _mainBuildingPrefab: {fileID: 6724371321986522513, guid: ec3d27fbb5c1d3b4a96d8ca27dd21cc0, type: 3}
 --- !u!114 &5749486471142288027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -641,7 +643,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d22b034719b94ef42b4dd972f1e8c6d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5
+  _speed: 10
   _minPositionToTarget: 2
   _target: {fileID: 0}
   _forwardPoint: {fileID: 1817431577073106771}

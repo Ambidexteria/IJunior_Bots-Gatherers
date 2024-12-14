@@ -27,49 +27,21 @@ public class ColonizationController : MonoBehaviour
 
     private void TakeControlOverMainBuiding(MainBuilding mainBuidling)
     {
-        _coroutine = StartCoroutine(TrySetFlagForANewMainBuilding(mainBuidling));
+        _coroutine = StartCoroutine(TrySetFlag(mainBuidling));
     }
 
-    private IEnumerator TrySetFlagForANewMainBuilding(MainBuilding oldBuidling)
+    private IEnumerator TrySetFlag(MainBuilding mainBuilding)
     {
         yield return new WaitForSeconds(0.1f);
 
         _playerClickLeftMouseButton = false;
 
-        Debug.Log(nameof(TrySetFlagForANewMainBuilding));
-
-        Debug.Log(_playerClickLeftMouseButton);
-
-        //yield return new WaitUntil(() => _playerClickLeftMouseButton == true);
         yield return new WaitUntil(() => _playerClickLeftMouseButton == true);
 
-        Debug.Log(_playerClickLeftMouseButton);
-
-        Debug.Log(nameof(TrySetFlagForANewMainBuilding) + " continued");
-
-        if (_constructionPoint.TryPlaceFlagForANewBuilding(out Vector3 placePosition))
+        if (_constructionPoint.TryGetPlaceForFlag(out Vector3 placePosition))
         {
-            oldBuidling.SetFlagForConstructionNewBase(placePosition);
+            mainBuilding.SetFlagForConstructionNewBase(placePosition);
         }
-
-        //_playerClickLeftMouseButton = false;
-        //_coroutineWorking = true;
-
-        //Vector3 placePosition;
-
-        //while (_coroutineWorking)
-        //{
-        //    if (_playerClickLeftMouseButton)
-        //    {
-        //        if (_constructionPoint.TryPlaceFlagForANewBuilding(out placePosition))
-        //        {
-        //            oldBuidling.SetFlagForConstructionNewBase(placePosition);
-        //            _coroutineWorking = false;
-        //        }
-        //    }
-
-        //    yield return null;
-        //}
 
         _playerClickLeftMouseButton = false;
         StopCoroutine(_coroutine);

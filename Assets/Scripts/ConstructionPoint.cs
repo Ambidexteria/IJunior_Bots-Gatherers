@@ -6,21 +6,9 @@ using UnityEngine;
 public class ConstructionPoint : MonoBehaviour
 {
     [SerializeField] private LayerMask _mask;
-    [SerializeField] private MainBuildingPicker _mainBuildingPicker;
     [SerializeField] private Camera _mainCamera;
-    [SerializeField] private PlayerInput _playerInput;
 
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
-    }
-
-    public bool TryPlaceFlagForANewBuilding(out Vector3 placePosition)
+    public bool TryGetPlaceForFlag(out Vector3 placePosition)
     {
         placePosition = Vector3.zero;
 
@@ -30,7 +18,6 @@ public class ConstructionPoint : MonoBehaviour
         {
             if (hit.collider.transform.root.TryGetComponent(out Ground mainBuilding))
             {
-                Debug.Log("ground is found");
                 placePosition = hit.point;
                 return true;
             }

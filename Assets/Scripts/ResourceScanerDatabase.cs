@@ -9,6 +9,7 @@ public class ResourceScanerDatabase : MonoBehaviour
     private List<Resource> _resourcesMarkedForGathering = new();
     private List<Resource> _resourcesUnmarked = new();
 
+
     private void OnEnable()
     {
         _scaner.ResourcesFound += UpdateResources;
@@ -21,6 +22,9 @@ public class ResourceScanerDatabase : MonoBehaviour
 
     public bool TryGetNearestResourceForGathering(out Resource resource, Vector3 currentPosition)
     {
+        if (_scaner == null)
+            throw new System.NullReferenceException();
+
         resource = null;
 
         if (_resourcesUnmarked.Count > 0)

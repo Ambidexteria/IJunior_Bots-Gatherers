@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainBuilding : MonoBehaviour
+public class MainBuilding : MonoBehaviour, IBuilding
 {
     [SerializeField] private List<Bot> _bots;
-    [SerializeField] private int _maxBots;
+    [SerializeField] private int _maxBots = 5;
+    [SerializeField] private int _minBots = 1;
     [SerializeField] private int _resourcesCount;
     [SerializeField] private ResourceCollector _resourceCollector;
     [SerializeField] private ResourceScanerDatabase _resourceScanerDatabase;
@@ -21,6 +22,29 @@ public class MainBuilding : MonoBehaviour
     public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingPrice;
     public bool IsBotCanBeCreated => _resourcesCount >= _botPrice && _bots.Count < _maxBots;
 
+    private void Awake()
+    {
+        _resourceScanerDatabase = FindFirstObjectByType<ResourceScanerDatabase>();
+        _botSpawner = FindFirstObjectByType<BotSpawner>();
+
+        if (_resourceScanerDatabase == null)
+            throw new NullReferenceException();
+    }
+
+    private void OnEnable()
+    {
+        if (_bots.Count > 0)
+            foreach (var bot in _bots)
+                bot.MainBuildingChanged += RemoveBot;
+    }
+
+    private void OnDisable()
+    {
+        if (_bots.Count > 0)
+            foreach (var bot in _bots)
+                bot.MainBuildingChanged -= RemoveBot;
+    }
+
     private void Update()
     {
         GatherResources();
@@ -28,8 +52,11 @@ public class MainBuilding : MonoBehaviour
 
     public void SetFlagForConstructionNewBase(Vector3 placePosition)
     {
-        ConstructionFlagSet?.Invoke(placePosition);
-        _mainBuildingFlag.Place(placePosition);
+        if(_bots.Count > _minBots)
+        {
+            ConstructionFlagSet?.Invoke(placePosition);
+            _mainBuildingFlag.Place(placePosition);
+        }
     }
 
     public void CreateNewBot()
@@ -37,6 +64,7 @@ public class MainBuilding : MonoBehaviour
         Bot newBot = _botSpawner.Spawn();
         _bots.Add(newBot);
         newBot.transform.position = _botSpawnPosition.position;
+        newBot.MainBuildingChanged += RemoveBot;
 
         _resourcesCount -= _botPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
@@ -44,8 +72,11 @@ public class MainBuilding : MonoBehaviour
 
     public bool TrySendBotForConstruction()
     {
+        Debug.Log(nameof(TrySendBotForConstruction));
         if (TryGetIdleBot(out Bot idleBot))
         {
+            Debug.Log(nameof(SendBotForConstruction));
+
             SendBotForConstruction(idleBot);
             return true;
         }
@@ -55,10 +86,32 @@ public class MainBuilding : MonoBehaviour
         }
     }
 
+    public void AddBot(Bot bot)
+    {
+        if(_bots.Count < _maxBots)
+        {
+            _bots.Add(bot);
+        }
+    }
+
+    public void Place(Vector3 position)
+    {
+        transform.position = position;
+        gameObject.SetActive(true);
+    }
+
+    private void RemoveBot(Bot bot)
+    {
+        Debug.Log("bot removed");
+        _bots.Remove(bot);
+        bot.MainBuildingChanged -= RemoveBot;
+    }
+
     private void GatherResources()
     {
         if (TryGetIdleBot(out Bot idleBot))
         {
+            Debug.Log(nameof(GatherResources));
             SendBotForGatheringResource(idleBot);
         }
     }
@@ -74,6 +127,7 @@ public class MainBuilding : MonoBehaviour
     {
         if (_resourceScanerDatabase.TryGetNearestResourceForGathering(out Resource resource, bot.transform.position))
         {
+            Debug.Log(nameof(SendBotForGatheringResource));
             bot.SendForGatheringResource(resource, _resourceCollector.transform);
             resource.Collected += Collect;
         }
@@ -81,7 +135,7 @@ public class MainBuilding : MonoBehaviour
 
     private void SendBotForConstruction(Bot bot)
     {
-        bot.SendForConstruction(_mainBuildingFlag);
+        bot.SendForConstructionMainBuilding(_mainBuildingFlag);
         _resourcesCount -= _mainBuildingPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }
