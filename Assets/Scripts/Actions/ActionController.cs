@@ -60,7 +60,6 @@ public class ActionController : MonoBehaviour
         _launchedActionCoroutine = null;
 
         ActionCompleted?.Invoke();
-        Debug.Log("Actions completed");
 
         if (_loop)
         {

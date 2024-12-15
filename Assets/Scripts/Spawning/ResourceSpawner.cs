@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ResourceSpawner : GenericSpawner<Resource>
 {
+    [SerializeField] private Transform _parentObject;
     [SerializeField] private string _objectName;
     [SerializeField] private SpawnZone3D _spawnZone;
     [SerializeField] private float _spawnCooldown = 5f;
@@ -39,6 +40,7 @@ public class ResourceSpawner : GenericSpawner<Resource>
         resource.Collected += Despawn;
         resource.Drop();
         resource.gameObject.SetActive(true);
+        resource.transform.SetParent(_parentObject, true);
         resource.gameObject.name = _objectName + "_" + _resourceNumber;
 
         _resourcesOnMap.Add(resource);

@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class MainBuildingFlag : MonoBehaviour
 {
-    private void Awake()
-    {
-        Hide();
-    }
+    public bool IsConstructionStarted { get; private set; }
 
     public void Place(Vector3 position)
     {
@@ -18,5 +15,15 @@ public class MainBuildingFlag : MonoBehaviour
     public void Hide()
     {
         gameObject.SetActive(false);
+    }
+
+    public void StartConstruction()
+    {
+        IsConstructionStarted = true;
+    }
+
+    public void EndConstruction()
+    {
+        IsConstructionStarted = false;
     }
 }

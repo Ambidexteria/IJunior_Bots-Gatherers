@@ -7,9 +7,11 @@ public class ActionWaitConstructionEnd : IUnitAction
 {
     private MainBuildingFlag _flag;
     private WaitForSeconds _wait;
+    private IBuilding _building;
 
-    public ActionWaitConstructionEnd(MainBuildingFlag flag, float waitTime)
+    public ActionWaitConstructionEnd(IBuilding building, MainBuildingFlag flag, float waitTime)
     {
+        _building = building;
         _flag = flag;
         _wait = new WaitForSeconds(waitTime);
     }
@@ -19,7 +21,11 @@ public class ActionWaitConstructionEnd : IUnitAction
     public IEnumerator Launch()
     {
         yield return _wait;
+
+        _flag.EndConstruction();
         _flag.Hide();
+        _building.Enable();
+
         Completed?.Invoke();
     }
 }

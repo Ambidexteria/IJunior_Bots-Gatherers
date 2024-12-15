@@ -42,8 +42,6 @@ public class Bot : SpawnableObject
         building.AddBot(this);
         building.gameObject.SetActive(false);
 
-        Debug.Log("MainBuildingChanged invoked");
-        Debug.Log(MainBuildingChanged.Method);
         MainBuildingChanged?.Invoke(this);
 
         _chain = CreateConstructionChainOfActions(flag, building);
@@ -77,7 +75,7 @@ public class Bot : SpawnableObject
         {
             new ActionMoveToTarget(_moverToTarget, flag.transform),
             new ActionPlaceBuilding(building, flag.transform.position),
-            new ActionWaitConstructionEnd(flag, _waitConstructionTime),
+            new ActionWaitConstructionEnd(building, flag, _waitConstructionTime),
             new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
         };
 

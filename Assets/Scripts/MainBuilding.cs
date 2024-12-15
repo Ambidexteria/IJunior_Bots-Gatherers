@@ -13,7 +13,7 @@ public class MainBuilding : MonoBehaviour, IBuilding
     [SerializeField] private BotSpawner _botSpawner;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private int _botPrice = 3;
-    [SerializeField] private int _mainBuildingPrice = 3;
+    [SerializeField] private int _mainBuildingPrice = 5;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
 
     public event Action<int> ResourcesCountChanged;
@@ -28,6 +28,9 @@ public class MainBuilding : MonoBehaviour, IBuilding
         _botSpawner = FindFirstObjectByType<BotSpawner>();
 
         if (_resourceScanerDatabase == null)
+            throw new NullReferenceException();
+
+        if (_botSpawner == null)
             throw new NullReferenceException();
     }
 
@@ -52,7 +55,7 @@ public class MainBuilding : MonoBehaviour, IBuilding
 
     public void SetFlagForConstructionNewBase(Vector3 placePosition)
     {
-        if(_bots.Count > _minBots)
+        if(_bots.Count > _minBots && _mainBuildingFlag.IsConstructionStarted == false)
         {
             ConstructionFlagSet?.Invoke(placePosition);
             _mainBuildingFlag.Place(placePosition);
@@ -72,11 +75,9 @@ public class MainBuilding : MonoBehaviour, IBuilding
 
     public bool TrySendBotForConstruction()
     {
-        Debug.Log(nameof(TrySendBotForConstruction));
         if (TryGetIdleBot(out Bot idleBot))
         {
-            Debug.Log(nameof(SendBotForConstruction));
-
+            _mainBuildingFlag.StartConstruction();
             SendBotForConstruction(idleBot);
             return true;
         }
@@ -97,12 +98,15 @@ public class MainBuilding : MonoBehaviour, IBuilding
     public void Place(Vector3 position)
     {
         transform.position = position;
+    }
+
+    public void Enable()
+    {
         gameObject.SetActive(true);
     }
 
     private void RemoveBot(Bot bot)
     {
-        Debug.Log("bot removed");
         _bots.Remove(bot);
         bot.MainBuildingChanged -= RemoveBot;
     }
@@ -111,7 +115,6 @@ public class MainBuilding : MonoBehaviour, IBuilding
     {
         if (TryGetIdleBot(out Bot idleBot))
         {
-            Debug.Log(nameof(GatherResources));
             SendBotForGatheringResource(idleBot);
         }
     }
@@ -127,7 +130,6 @@ public class MainBuilding : MonoBehaviour, IBuilding
     {
         if (_resourceScanerDatabase.TryGetNearestResourceForGathering(out Resource resource, bot.transform.position))
         {
-            Debug.Log(nameof(SendBotForGatheringResource));
             bot.SendForGatheringResource(resource, _resourceCollector.transform);
             resource.Collected += Collect;
         }

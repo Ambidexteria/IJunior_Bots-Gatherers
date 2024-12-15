@@ -9,8 +9,6 @@ public class MainBuildingPicker : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private PlayerInput _playerInput;
 
-    private bool _basePicked = false;
-
     public event Action<MainBuilding> Picked;
 
     private void OnEnable()
@@ -31,14 +29,8 @@ public class MainBuildingPicker : MonoBehaviour
         {
             if (hit.collider.transform.root.TryGetComponent(out MainBuilding mainBuilding))
             {
-                _basePicked = true;
-                Debug.Log("base picked");
                 Picked?.Invoke(mainBuilding);
             }
-        }
-        else if (_basePicked)
-        {
-            _basePicked = false;
         }
     }
 }

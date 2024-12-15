@@ -47,7 +47,6 @@ public class MainBuildingStateMachine : MonoBehaviour
 
     private void SetConstructingNewBaseState(Vector3 position)
     {
-        Debug.Log(nameof(SetConstructingNewBaseState));
         ChangeState(_buildingStates[MainBuildingState.ConstructingNewBase]);
     }
 

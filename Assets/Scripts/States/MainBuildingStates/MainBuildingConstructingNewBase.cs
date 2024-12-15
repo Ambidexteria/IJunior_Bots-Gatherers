@@ -23,12 +23,8 @@ public class MainBuildingConstructingNewBase : IBuildingState
     {
         if (_building.IsResourcesEnoughForConstructionNewMainBuilding)
         {
-            Debug.Log(nameof(_building.IsResourcesEnoughForConstructionNewMainBuilding));
-
             if (_building.TrySendBotForConstruction())
             {
-                Debug.Log(nameof(_building.TrySendBotForConstruction));
-
                 ConstructionCompleted?.Invoke();
             }
         }

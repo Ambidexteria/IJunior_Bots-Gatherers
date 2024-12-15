@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 6754882402976440507}
   - component: {fileID: 3515641225223328178}
   - component: {fileID: 9185947095665318426}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Eye (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5516121198437823095}
   - component: {fileID: 8112385993854802352}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Spot Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,7 +217,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1817431577073106771}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ForwardPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -356,7 +356,7 @@ GameObject:
   - component: {fileID: 4714784938054059500}
   - component: {fileID: 2478256958436209464}
   - component: {fileID: 8527747843185570361}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 6643892426415902303}
   - component: {fileID: 5749486471142288027}
   - component: {fileID: 283496080637581178}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -785,6 +785,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fog
       objectReference: {fileID: 0}
+    - target: {fileID: 5634686635025304332, guid: f50e2c4d13034c64ca31018a940ea019, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8420915179519342039, guid: f50e2c4d13034c64ca31018a940ea019, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -862,6 +866,10 @@ PrefabInstance:
     - target: {fileID: 5634686635025304332, guid: f50e2c4d13034c64ca31018a940ea019, type: 3}
       propertyPath: m_Name
       value: Fog (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5634686635025304332, guid: f50e2c4d13034c64ca31018a940ea019, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8420915179519342039, guid: f50e2c4d13034c64ca31018a940ea019, type: 3}
       propertyPath: m_LocalPosition.x
