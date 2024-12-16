@@ -12,9 +12,6 @@ public class MainBuildingSpawner : GenericSpawner<MainBuilding>
 
     public override MainBuilding Spawn()
     {
-        MainBuilding mainBuilding = GetNextObject();
-        mainBuilding.SetDependencies(_botSpawner, _scanerDatabase);
-
-        return mainBuilding;
+        return GetNextObject();
     }
 }

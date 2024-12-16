@@ -10,7 +10,6 @@ public class Bot : SpawnableObject
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
-    [SerializeField] private MainBuildingSpawner _mainBuildingSpawner;
 
     private BotState _state = BotState.Idle;
     private ChainOfActions _chain;

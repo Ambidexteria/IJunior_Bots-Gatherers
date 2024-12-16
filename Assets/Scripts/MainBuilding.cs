@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class MainBuilding : SpawnableObject, IBuilding, IPickable
 {
@@ -9,14 +10,15 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     [SerializeField] private int _minBots = 1;
     [SerializeField] private int _resourcesCount;
     [SerializeField] private ResourceCollector _resourceCollector;
-    [SerializeField] private ResourceScanerDatabase _resourceScanerDatabase;
-    [SerializeField] private BotSpawner _botSpawner;
-    [SerializeField] private MainBuildingSpawner _mainBuildingSpawner;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private ColonizationController _colonizationController;
     [SerializeField] private int _botPrice = 3;
     [SerializeField] private int _mainBuildingPrice = 5;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
+
+    private ResourceScanerDatabase _resourceScanerDatabase;
+    private BotSpawner _botSpawner;
+    private MainBuildingSpawner _mainBuildingSpawner;
 
     public event Action<int> ResourcesCountChanged;
     public event Action<Vector3> ConstructionFlagSet;
@@ -39,10 +41,12 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
         GatherResources();
     }
 
-    public void SetDependencies(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase)
+    [Inject]
+    private void Construct(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase, MainBuildingSpawner mainBuildingSpawner)
     {
         _botSpawner = botSpawner;
         _resourceScanerDatabase = scanerDatabase;
+        _mainBuildingSpawner = mainBuildingSpawner;
     }
 
     public void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
@@ -66,8 +70,10 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
 
     public bool TrySendBotForConstruction()
     {
+        Debug.Log(nameof(TrySendBotForConstruction));
         if (TryGetIdleBot(out Bot idleBot) && IsResourcesEnoughForConstructionNewMainBuilding)
         {
+            Debug.Log("start construction");
             _mainBuildingFlag.StartConstruction();
 
             MainBuilding mainBuilding = _mainBuildingSpawner.Spawn();

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class MainBuildingPicker : MonoBehaviour
 {
@@ -17,6 +18,12 @@ public class MainBuildingPicker : MonoBehaviour
     private void OnDisable()
     {
         _playerInput.LeftMouseButtonClicked -= PickMainBuilding;
+    }
+
+    [Inject]
+    public void Construct(PlayerInput input)
+    {
+        _playerInput = input;
     }
 
     private void PickMainBuilding()

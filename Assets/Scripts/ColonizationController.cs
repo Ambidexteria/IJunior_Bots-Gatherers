@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 public class ColonizationController : MonoBehaviour
 {
@@ -27,6 +28,13 @@ public class ColonizationController : MonoBehaviour
     public void PickPlaceForNewMainBuilding()
     {
         _coroutine = StartCoroutine(TrySetFlag());
+    }
+
+    [Inject]
+    public void Construct(PlayerInput playerInput, FlagPlacer flagPlacer)
+    {
+        _playerInput = playerInput;
+        _flagPlacer = flagPlacer;
     }
 
     private IEnumerator TrySetFlag()

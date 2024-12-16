@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Pool;
+using Zenject;
 
 public abstract class GenericSpawner<Type> : MonoBehaviour where Type : SpawnableObject
 {
@@ -9,6 +10,7 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
     [SerializeField] private int _poolMaxSize = 100;
 
     private ObjectPool<Type> _pool;
+    private GenericSpawnableObjectFactory<Type> _factory;
 
     private void Awake()
     {
@@ -18,6 +20,12 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
         InitializePool();
 
         PrepareOnAwake();
+    }
+
+    [Inject]
+    public void Construct(GenericSpawnableObjectFactory<Type> factory)
+    {
+        _factory = factory;
     }
 
     public virtual void PrepareOnAwake() { }
@@ -60,6 +68,7 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
 
     private Type Create()
     {
-        return Instantiate(_prefab);
+        return _factory.Create();
+        //return Instantiate(_prefab);
     }
 }

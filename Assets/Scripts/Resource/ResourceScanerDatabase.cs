@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class ResourceScanerDatabase : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class ResourceScanerDatabase : MonoBehaviour
 
     private List<Resource> _resourcesMarkedForGathering = new();
     private List<Resource> _resourcesUnmarked = new();
-
 
     private void OnEnable()
     {
@@ -18,6 +18,12 @@ public class ResourceScanerDatabase : MonoBehaviour
     private void OnDisable()
     {
         _scaner.ResourcesFound -= UpdateResources;
+    }
+
+    [Inject]
+    public void Construct(ResourceScaner scaner)
+    {
+        _scaner = scaner;
     }
 
     public bool TryGetNearestResourceForGathering(out Resource resource, Vector3 currentPosition)
