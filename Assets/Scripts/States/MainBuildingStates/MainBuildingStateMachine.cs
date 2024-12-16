@@ -6,21 +6,21 @@ using UnityEngine;
 public class MainBuildingStateMachine : MonoBehaviour
 {
     private MainBuilding _building;
-
     private IBuildingState _currentState;
-
     private Dictionary<MainBuildingState, IBuildingState> _buildingStates;
 
     private void Awake()
     {
         _building = GetComponent<MainBuilding>();
 
-        _buildingStates = new Dictionary<MainBuildingState, IBuildingState> ();
-        _buildingStates.Add(MainBuildingState.Idle, new MainBuildingIdleState(_building));
-
         MainBuildingConstructingNewBase constructingNewBase = new MainBuildingConstructingNewBase(_building);
         constructingNewBase.ConstructionCompleted += SetIdleState;
-        _buildingStates.Add(MainBuildingState.ConstructingNewBase, constructingNewBase);
+
+        _buildingStates = new Dictionary<MainBuildingState, IBuildingState>
+        {
+            { MainBuildingState.Idle, new MainBuildingIdleState(_building) },
+            { MainBuildingState.ConstructingNewBase, constructingNewBase }
+        };
         
         SetIdleState();
     }

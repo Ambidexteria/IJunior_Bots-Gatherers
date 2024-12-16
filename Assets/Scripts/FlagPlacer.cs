@@ -3,10 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConstructionPoint : MonoBehaviour
+public class FlagPlacer : MonoBehaviour
 {
     [SerializeField] private LayerMask _mask;
-    [SerializeField] private Camera _mainCamera;
+
+    private Camera _mainCamera;
+
+    private void Awake()
+    {
+        _mainCamera = Camera.main;
+    }
 
     public bool TryGetPlaceForFlag(out Vector3 placePosition)
     {

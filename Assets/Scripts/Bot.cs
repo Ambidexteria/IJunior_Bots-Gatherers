@@ -10,12 +10,10 @@ public class Bot : SpawnableObject
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
-    [SerializeField] private MainBuilding _mainBuildingPrefab;
+    [SerializeField] private MainBuildingSpawner _mainBuildingSpawner;
 
     private BotState _state = BotState.Idle;
     private ChainOfActions _chain;
-
-    public event Action<Bot> MainBuildingChanged;
 
     public BotState State => _state;
 
@@ -36,14 +34,8 @@ public class Bot : SpawnableObject
         _state = BotState.Gathering;
     }
 
-    public void SendForConstructionMainBuilding(MainBuildingFlag flag)
+    public void SendForConstructionMainBuilding(MainBuildingFlag flag, IBuilding building)
     {
-        MainBuilding building = Instantiate(_mainBuildingPrefab);
-        building.AddBot(this);
-        building.gameObject.SetActive(false);
-
-        MainBuildingChanged?.Invoke(this);
-
         _chain = CreateConstructionChainOfActions(flag, building);
         _actionController.SetChainOfActions(_chain);
         _state = BotState.Working;

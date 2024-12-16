@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainBuilding : MonoBehaviour, IBuilding
+public class MainBuilding : SpawnableObject, IBuilding, IPickable
 {
     [SerializeField] private List<Bot> _bots;
     [SerializeField] private int _maxBots = 5;
@@ -11,7 +11,9 @@ public class MainBuilding : MonoBehaviour, IBuilding
     [SerializeField] private ResourceCollector _resourceCollector;
     [SerializeField] private ResourceScanerDatabase _resourceScanerDatabase;
     [SerializeField] private BotSpawner _botSpawner;
+    [SerializeField] private MainBuildingSpawner _mainBuildingSpawner;
     [SerializeField] private Transform _botSpawnPosition;
+    [SerializeField] private ColonizationController _colonizationController;
     [SerializeField] private int _botPrice = 3;
     [SerializeField] private int _mainBuildingPrice = 5;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
@@ -22,30 +24,14 @@ public class MainBuilding : MonoBehaviour, IBuilding
     public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingPrice;
     public bool IsBotCanBeCreated => _resourcesCount >= _botPrice && _bots.Count < _maxBots;
 
-    private void Awake()
-    {
-        _resourceScanerDatabase = FindFirstObjectByType<ResourceScanerDatabase>();
-        _botSpawner = FindFirstObjectByType<BotSpawner>();
-
-        if (_resourceScanerDatabase == null)
-            throw new NullReferenceException();
-
-        if (_botSpawner == null)
-            throw new NullReferenceException();
-    }
-
     private void OnEnable()
     {
-        if (_bots.Count > 0)
-            foreach (var bot in _bots)
-                bot.MainBuildingChanged += RemoveBot;
+        _colonizationController.PositionPicked += SetFlagForConstructionNewMainBuilding;
     }
 
     private void OnDisable()
     {
-        if (_bots.Count > 0)
-            foreach (var bot in _bots)
-                bot.MainBuildingChanged -= RemoveBot;
+        _colonizationController.PositionPicked -= SetFlagForConstructionNewMainBuilding;
     }
 
     private void Update()
@@ -53,7 +39,13 @@ public class MainBuilding : MonoBehaviour, IBuilding
         GatherResources();
     }
 
-    public void SetFlagForConstructionNewBase(Vector3 placePosition)
+    public void SetDependencies(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase)
+    {
+        _botSpawner = botSpawner;
+        _resourceScanerDatabase = scanerDatabase;
+    }
+
+    public void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
     {
         if(_bots.Count > _minBots && _mainBuildingFlag.IsConstructionStarted == false)
         {
@@ -67,7 +59,6 @@ public class MainBuilding : MonoBehaviour, IBuilding
         Bot newBot = _botSpawner.Spawn();
         _bots.Add(newBot);
         newBot.transform.position = _botSpawnPosition.position;
-        newBot.MainBuildingChanged += RemoveBot;
 
         _resourcesCount -= _botPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
@@ -75,10 +66,17 @@ public class MainBuilding : MonoBehaviour, IBuilding
 
     public bool TrySendBotForConstruction()
     {
-        if (TryGetIdleBot(out Bot idleBot))
+        if (TryGetIdleBot(out Bot idleBot) && IsResourcesEnoughForConstructionNewMainBuilding)
         {
             _mainBuildingFlag.StartConstruction();
-            SendBotForConstruction(idleBot);
+
+            MainBuilding mainBuilding = _mainBuildingSpawner.Spawn();
+            mainBuilding.gameObject.SetActive(false);
+            mainBuilding.AddBot(idleBot);
+
+            _bots.Remove(idleBot);
+
+            SendBotForConstruction(idleBot, mainBuilding);
             return true;
         }
         else
@@ -105,10 +103,10 @@ public class MainBuilding : MonoBehaviour, IBuilding
         gameObject.SetActive(true);
     }
 
-    private void RemoveBot(Bot bot)
+    public void Pick()
     {
-        _bots.Remove(bot);
-        bot.MainBuildingChanged -= RemoveBot;
+        Debug.Log("mainBUilding.Pick()");
+        _colonizationController.PickPlaceForNewMainBuilding();
     }
 
     private void GatherResources()
@@ -135,9 +133,9 @@ public class MainBuilding : MonoBehaviour, IBuilding
         }
     }
 
-    private void SendBotForConstruction(Bot bot)
+    private void SendBotForConstruction(Bot bot, IBuilding building)
     {
-        bot.SendForConstructionMainBuilding(_mainBuildingFlag);
+        bot.SendForConstructionMainBuilding(_mainBuildingFlag, building);
         _resourcesCount -= _mainBuildingPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }

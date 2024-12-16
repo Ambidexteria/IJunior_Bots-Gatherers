@@ -617,7 +617,7 @@ MonoBehaviour:
   _moverToTarget: {fileID: 283496080637581178}
   _resourcePosition: {fileID: 1581159077690027534}
   _actionController: {fileID: 5749486471142288027}
-  _mainBuildingPrefab: {fileID: 6724371321986522513, guid: ec3d27fbb5c1d3b4a96d8ca27dd21cc0, type: 3}
+  _mainBuildingSpawner: {fileID: 3703268017951307840, guid: 9fe4a9ecc3cecd940b04be25ed820511, type: 3}
 --- !u!114 &5749486471142288027
 MonoBehaviour:
   m_ObjectHideFlags: 0

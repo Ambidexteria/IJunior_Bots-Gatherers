@@ -9,8 +9,6 @@ public class MainBuildingPicker : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private PlayerInput _playerInput;
 
-    public event Action<MainBuilding> Picked;
-
     private void OnEnable()
     {
         _playerInput.LeftMouseButtonClicked += PickMainBuilding;
@@ -23,13 +21,15 @@ public class MainBuildingPicker : MonoBehaviour
 
     private void PickMainBuilding()
     {
+        Debug.Log(nameof(PickMainBuilding));
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 10000f, _mask))
         {
-            if (hit.collider.transform.root.TryGetComponent(out MainBuilding mainBuilding))
+            if (hit.collider.transform.root.TryGetComponent(out IPickable pickableObject))
             {
-                Picked?.Invoke(mainBuilding);
+                Debug.Log("picked");
+                pickableObject.Pick();
             }
         }
     }

@@ -1,36 +1,35 @@
+using System;
 using System.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class ColonizationController : MonoBehaviour
 {
-    [SerializeField] private MainBuildingPicker _mainBuildingPicker;
     [SerializeField] private PlayerInput _playerInput;
-    [SerializeField] private ConstructionPoint _constructionPoint;
+    [SerializeField] private FlagPlacer _flagPlacer;
 
     private bool _playerClickLeftMouseButton = false;
     private bool _settingFlagCanceled = false;
     private bool _coroutineWorking = true;
     private Coroutine _coroutine;
 
+    public event Action<Vector3> PositionPicked;
+
     private void OnEnable()
     {
-        _mainBuildingPicker.Picked += TakeControlOverMainBuiding;
         _playerInput.LeftMouseButtonClicked += ClickLeftMouseButton;
     }
 
     private void OnDisable()
     {
-        _mainBuildingPicker.Picked -= TakeControlOverMainBuiding;
         _playerInput.LeftMouseButtonClicked -= ClickLeftMouseButton;
     }
 
-    private void TakeControlOverMainBuiding(MainBuilding mainBuidling)
+    public void PickPlaceForNewMainBuilding()
     {
-        _coroutine = StartCoroutine(TrySetFlag(mainBuidling));
+        _coroutine = StartCoroutine(TrySetFlag());
     }
 
-    private IEnumerator TrySetFlag(MainBuilding mainBuilding)
+    private IEnumerator TrySetFlag()
     {
         yield return new WaitForSeconds(0.1f);
 
@@ -38,9 +37,10 @@ public class ColonizationController : MonoBehaviour
 
         yield return new WaitUntil(() => _playerClickLeftMouseButton == true);
 
-        if (_constructionPoint.TryGetPlaceForFlag(out Vector3 placePosition))
+        if (_flagPlacer.TryGetPlaceForFlag(out Vector3 placePosition))
         {
-            mainBuilding.SetFlagForConstructionNewBase(placePosition);
+            Debug.Log(nameof(_flagPlacer.TryGetPlaceForFlag));
+            PositionPicked?.Invoke(placePosition);
         }
 
         _playerClickLeftMouseButton = false;
