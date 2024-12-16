@@ -5,12 +5,9 @@ using Zenject;
 
 public class ColonizationController : MonoBehaviour
 {
-    [SerializeField] private PlayerInput _playerInput;
-    [SerializeField] private FlagPlacer _flagPlacer;
-
+    private PlayerInput _playerInput;
+    private FlagPlacer _flagPlacer;
     private bool _playerClickLeftMouseButton = false;
-    private bool _settingFlagCanceled = false;
-    private bool _coroutineWorking = true;
     private Coroutine _coroutine;
 
     public event Action<Vector3> PositionPicked;
@@ -31,7 +28,7 @@ public class ColonizationController : MonoBehaviour
     }
 
     [Inject]
-    public void Construct(PlayerInput playerInput, FlagPlacer flagPlacer)
+    private void Construct(PlayerInput playerInput, FlagPlacer flagPlacer)
     {
         _playerInput = playerInput;
         _flagPlacer = flagPlacer;
@@ -47,7 +44,6 @@ public class ColonizationController : MonoBehaviour
 
         if (_flagPlacer.TryGetPlaceForFlag(out Vector3 placePosition))
         {
-            Debug.Log(nameof(_flagPlacer.TryGetPlaceForFlag));
             PositionPicked?.Invoke(placePosition);
         }
 
@@ -59,10 +55,5 @@ public class ColonizationController : MonoBehaviour
     private void ClickLeftMouseButton()
     {
         _playerClickLeftMouseButton = true;
-    }
-
-    private void CancelSetFlag()
-    {
-        _coroutineWorking = false;
     }
 }

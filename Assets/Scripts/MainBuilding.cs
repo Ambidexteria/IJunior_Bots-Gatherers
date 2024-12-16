@@ -41,14 +41,6 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
         GatherResources();
     }
 
-    [Inject]
-    private void Construct(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase, MainBuildingSpawner mainBuildingSpawner)
-    {
-        _botSpawner = botSpawner;
-        _resourceScanerDatabase = scanerDatabase;
-        _mainBuildingSpawner = mainBuildingSpawner;
-    }
-
     public void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
     {
         if(_bots.Count > _minBots && _mainBuildingFlag.IsConstructionStarted == false)
@@ -70,10 +62,8 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
 
     public bool TrySendBotForConstruction()
     {
-        Debug.Log(nameof(TrySendBotForConstruction));
         if (TryGetIdleBot(out Bot idleBot) && IsResourcesEnoughForConstructionNewMainBuilding)
         {
-            Debug.Log("start construction");
             _mainBuildingFlag.StartConstruction();
 
             MainBuilding mainBuilding = _mainBuildingSpawner.Spawn();
@@ -113,6 +103,14 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     {
         Debug.Log("mainBUilding.Pick()");
         _colonizationController.PickPlaceForNewMainBuilding();
+    }
+
+    [Inject]
+    private void Construct(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase, MainBuildingSpawner mainBuildingSpawner)
+    {
+        _botSpawner = botSpawner;
+        _resourceScanerDatabase = scanerDatabase;
+        _mainBuildingSpawner = mainBuildingSpawner;
     }
 
     private void GatherResources()
