@@ -7,17 +7,14 @@ public class MainBuildingIdleState : IBuildingState
         _building = building;
     }
 
-    public void OnStart()
-    {
-    }
+    public void OnStart() { }
 
-    public void OnStop()
-    {
-    }
+    public void OnStop() { }
 
     public void OnUpdate()
     {
-        if(_building.IsBotCanBeCreated)
-            _building.CreateNewBot();
+        _building.CreateNewBot();
+
+        _building.GatherResources();
     }
 }

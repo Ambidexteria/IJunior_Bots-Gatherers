@@ -5,21 +5,18 @@ using UnityEngine;
 
 public class ResourceScaner : MonoBehaviour
 {
-    private const string ResourceLayerName = "Resources";
-
+    [SerializeField] LayerMask _layerMask;
     [SerializeField] private float _range;
     [SerializeField] private float _cooldown;
 
     private WaitForSeconds _waitCooldown;
     private Coroutine _scanCoroutine;
-    private int _resourceLayerMask;
 
     public event Action<List<Resource>> ResourcesFound;
 
     private void Awake()
     {
         _waitCooldown = new WaitForSeconds(_cooldown);
-        _resourceLayerMask = LayerMask.GetMask(ResourceLayerName);
     }
 
     private void OnEnable()
@@ -40,7 +37,7 @@ public class ResourceScaner : MonoBehaviour
     {
         List<Resource> resources = new();
 
-        Collider[] hits = Physics.OverlapSphere(transform.position, _range, _resourceLayerMask);
+        Collider[] hits = Physics.OverlapSphere(transform.position, _range, _layerMask);
 
         foreach (var hit in hits)
         {

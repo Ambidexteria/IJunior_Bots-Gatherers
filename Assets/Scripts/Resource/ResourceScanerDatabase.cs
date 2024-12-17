@@ -5,8 +5,7 @@ using Zenject;
 
 public class ResourceScanerDatabase : MonoBehaviour
 {
-    [SerializeField] private ResourceScaner _scaner;
-
+    private ResourceScaner _scaner;
     private List<Resource> _resourcesMarkedForGathering = new();
     private List<Resource> _resourcesUnmarked = new();
 
@@ -18,12 +17,6 @@ public class ResourceScanerDatabase : MonoBehaviour
     private void OnDisable()
     {
         _scaner.ResourcesFound -= UpdateResources;
-    }
-
-    [Inject]
-    public void Construct(ResourceScaner scaner)
-    {
-        _scaner = scaner;
     }
 
     public bool TryGetNearestResourceForGathering(out Resource resource, Vector3 currentPosition)
@@ -45,6 +38,12 @@ public class ResourceScanerDatabase : MonoBehaviour
         }
 
         return false;
+    }
+
+    [Inject]
+    private void Construct(ResourceScaner scaner)
+    {
+        _scaner = scaner;
     }
 
     private Resource GetResourceNearestToPosition(Vector3 currentPosition)

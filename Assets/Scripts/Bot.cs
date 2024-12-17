@@ -1,11 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bot : SpawnableObject
 {
+    [SerializeField] private static int _creationPrice = 3;
     [SerializeField] private float _waitTakeResourceTime = 0.5f;
-    [SerializeField] private float _waitAfterCompletedChainOfActions = 0.1f;
+    [SerializeField] private float _timeWaitAfterCompletedChainOfActions = 0.1f;
     [SerializeField] private float _waitConstructionTime = 5f;
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
@@ -13,8 +15,15 @@ public class Bot : SpawnableObject
 
     private BotState _state = BotState.Idle;
     private ChainOfActions _chain;
+    private WaitForSeconds _waitAfterChainOfActions;
 
     public BotState State => _state;
+    public static int CreationPrice => _creationPrice;
+
+    private void Awake()
+    {
+        _waitAfterChainOfActions = new(_timeWaitAfterCompletedChainOfActions);
+    }
 
     private void OnEnable()
     {
@@ -42,6 +51,13 @@ public class Bot : SpawnableObject
 
     private void SetIdleState()
     {
+        StartCoroutine(WaitBeforeSetIdleState());
+    }
+
+    private IEnumerator WaitBeforeSetIdleState()
+    {
+        yield return _waitAfterChainOfActions;
+
         _state = BotState.Idle;
     }
 
@@ -54,7 +70,7 @@ public class Bot : SpawnableObject
             new ActionTakeResource(resource, _resourcePosition),
             new ActionMoveToTarget(_moverToTarget, basePosition),
             new ActionUnloadResource(resource),
-            new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
+            new ActionWaitForAPeriodOfTime(_timeWaitAfterCompletedChainOfActions),
         };
 
         return new ChainOfActions(actions);
@@ -67,7 +83,7 @@ public class Bot : SpawnableObject
             new ActionMoveToTarget(_moverToTarget, flag.transform),
             new ActionPlaceBuilding(building, flag.transform.position),
             new ActionWaitConstructionEnd(building, flag, _waitConstructionTime),
-            new ActionWaitForAPeriodOfTime(_waitAfterCompletedChainOfActions),
+            new ActionWaitForAPeriodOfTime(_timeWaitAfterCompletedChainOfActions),
         };
 
         return new ChainOfActions(actions);

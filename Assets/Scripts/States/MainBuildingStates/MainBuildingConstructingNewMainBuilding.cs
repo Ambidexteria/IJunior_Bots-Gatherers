@@ -1,23 +1,19 @@
 using System;
 using UnityEngine;
 
-public class MainBuildingConstructingNewBase : IBuildingState
+public class MainBuildingConstructingNewMainBuilding : IBuildingState
 {
     private MainBuilding _building;
-    public MainBuildingConstructingNewBase(MainBuilding mainBuilding)
+    public MainBuildingConstructingNewMainBuilding(MainBuilding mainBuilding)
     {
         _building = mainBuilding;
     }
 
     public event Action ConstructionCompleted;
 
-    public void OnStart()
-    {
-    }
+    public void OnStart() { }
 
-    public void OnStop()
-    {
-    }
+    public void OnStop() { }
 
     public void OnUpdate()
     {
@@ -27,6 +23,10 @@ public class MainBuildingConstructingNewBase : IBuildingState
             {
                 ConstructionCompleted?.Invoke();
             }
+        }
+        else
+        {
+            _building.GatherResources();
         }
     }
 }

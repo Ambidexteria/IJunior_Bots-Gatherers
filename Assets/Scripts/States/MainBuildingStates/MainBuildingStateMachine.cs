@@ -13,13 +13,13 @@ public class MainBuildingStateMachine : MonoBehaviour
     {
         _building = GetComponent<MainBuilding>();
 
-        MainBuildingConstructingNewBase constructingNewBase = new MainBuildingConstructingNewBase(_building);
-        constructingNewBase.ConstructionCompleted += SetIdleState;
+        MainBuildingConstructingNewMainBuilding constructingNewMainBuilding = new(_building);
+        constructingNewMainBuilding.ConstructionCompleted += SetIdleState;
 
         _buildingStates = new Dictionary<MainBuildingState, IBuildingState>
         {
             { MainBuildingState.Idle, new MainBuildingIdleState(_building) },
-            { MainBuildingState.ConstructingNewBase, constructingNewBase }
+            { MainBuildingState.ConstructingNewMainBuilding, constructingNewMainBuilding }
         };
         
         SetIdleState();
@@ -47,7 +47,7 @@ public class MainBuildingStateMachine : MonoBehaviour
 
     private void SetConstructingNewBaseState(Vector3 position)
     {
-        ChangeState(_buildingStates[MainBuildingState.ConstructingNewBase]);
+        ChangeState(_buildingStates[MainBuildingState.ConstructingNewMainBuilding]);
     }
 
     private void ChangeState(IBuildingState state)

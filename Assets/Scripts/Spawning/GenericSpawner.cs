@@ -22,12 +22,6 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
         PrepareOnAwake();
     }
 
-    [Inject]
-    public void Construct(GenericSpawnableObjectFactory<Type> factory)
-    {
-        _factory = factory;
-    }
-
     public virtual void PrepareOnAwake() { }
 
     public abstract Type Spawn();
@@ -49,6 +43,12 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
 
     public virtual void PrepareToDeactivate(Type spawnableObject) { }
 
+    [Inject]
+    private void Construct(GenericSpawnableObjectFactory<Type> factory)
+    {
+        _factory = factory;
+    }
+
     private Type PrepareForSpawn(Type spawnedObject)
     {
         return spawnedObject;
@@ -69,6 +69,5 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
     private Type Create()
     {
         return _factory.Create();
-        //return Instantiate(_prefab);
     }
 }

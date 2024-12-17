@@ -1,18 +1,14 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 public class MainBuilding : SpawnableObject, IBuilding, IPickable
 {
-    [SerializeField] private List<Bot> _bots;
-    [SerializeField] private int _maxBots = 5;
-    [SerializeField] private int _minBots = 1;
+    [SerializeField] private MainBuildingBotsDatabase _botsDatabase;
     [SerializeField] private int _resourcesCount;
     [SerializeField] private ResourceCollector _resourceCollector;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private ColonizationController _colonizationController;
-    [SerializeField] private int _botPrice = 3;
     [SerializeField] private int _mainBuildingPrice = 5;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
 
@@ -24,7 +20,6 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     public event Action<Vector3> ConstructionFlagSet;
 
     public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingPrice;
-    public bool IsBotCanBeCreated => _resourcesCount >= _botPrice && _bots.Count < _maxBots;
 
     private void OnEnable()
     {
@@ -36,33 +31,30 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
         _colonizationController.PositionPicked -= SetFlagForConstructionNewMainBuilding;
     }
 
-    private void Update()
+    public void GatherResources()
     {
-        GatherResources();
-    }
-
-    public void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
-    {
-        if(_bots.Count > _minBots && _mainBuildingFlag.IsConstructionStarted == false)
+        if (_botsDatabase.TryGetIdleBot(out Bot idleBot))
         {
-            ConstructionFlagSet?.Invoke(placePosition);
-            _mainBuildingFlag.Place(placePosition);
+            SendBotForGatheringResource(idleBot);
         }
     }
 
     public void CreateNewBot()
     {
-        Bot newBot = _botSpawner.Spawn();
-        _bots.Add(newBot);
-        newBot.transform.position = _botSpawnPosition.position;
+        if (IsBotCanBeCreated())
+        {
+            Bot newBot = _botSpawner.Spawn();
+            _botsDatabase.AddNewBot(newBot);
+            newBot.transform.position = _botSpawnPosition.position;
 
-        _resourcesCount -= _botPrice;
-        ResourcesCountChanged?.Invoke(_resourcesCount);
+            _resourcesCount -= Bot.CreationPrice;
+            ResourcesCountChanged?.Invoke(_resourcesCount);
+        }
     }
 
     public bool TrySendBotForConstruction()
     {
-        if (TryGetIdleBot(out Bot idleBot) && IsResourcesEnoughForConstructionNewMainBuilding)
+        if (_botsDatabase.TryGetIdleBot(out Bot idleBot) && IsResourcesEnoughForConstructionNewMainBuilding)
         {
             _mainBuildingFlag.StartConstruction();
 
@@ -70,7 +62,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
             mainBuilding.gameObject.SetActive(false);
             mainBuilding.AddBot(idleBot);
 
-            _bots.Remove(idleBot);
+            _botsDatabase.RemoveBot(idleBot);
 
             SendBotForConstruction(idleBot, mainBuilding);
             return true;
@@ -83,10 +75,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
 
     public void AddBot(Bot bot)
     {
-        if(_bots.Count < _maxBots)
-        {
-            _bots.Add(bot);
-        }
+        _botsDatabase.AddNewBot(bot);
     }
 
     public void Place(Vector3 position)
@@ -101,23 +90,26 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
 
     public void Pick()
     {
-        Debug.Log("mainBUilding.Pick()");
         _colonizationController.PickPlaceForNewMainBuilding();
     }
 
     [Inject]
-    private void Construct(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase, MainBuildingSpawner mainBuildingSpawner)
+    private void Construct(BotSpawner botSpawner, ResourceScanerDatabase scanerDatabase, 
+        MainBuildingSpawner mainBuildingSpawner)
     {
         _botSpawner = botSpawner;
         _resourceScanerDatabase = scanerDatabase;
         _mainBuildingSpawner = mainBuildingSpawner;
     }
 
-    private void GatherResources()
+    private bool IsBotCanBeCreated() => _resourcesCount >= Bot.CreationPrice && _botsDatabase.CanAddNewBot;
+
+    private void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
     {
-        if (TryGetIdleBot(out Bot idleBot))
+        if (_botsDatabase.BotsCountBiggerThanMin && _mainBuildingFlag.IsConstructionStarted == false)
         {
-            SendBotForGatheringResource(idleBot);
+            ConstructionFlagSet?.Invoke(placePosition);
+            _mainBuildingFlag.Place(placePosition);
         }
     }
 
@@ -142,21 +134,5 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
         bot.SendForConstructionMainBuilding(_mainBuildingFlag, building);
         _resourcesCount -= _mainBuildingPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
-    }
-
-    private bool TryGetIdleBot(out Bot bot)
-    {
-        bot = null;
-
-        foreach (var tempBot in _bots)
-        {
-            if (tempBot.State == BotState.Idle)
-            {
-                bot = tempBot;
-                return true;
-            }
-        }
-
-        return false;
     }
 }

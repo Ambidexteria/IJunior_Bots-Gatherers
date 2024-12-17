@@ -5,12 +5,23 @@ using Zenject;
 
 public class ColonizationController : MonoBehaviour
 {
+    [SerializeField] private float _secondClickDelay = 0.1f;
+
     private PlayerInput _playerInput;
     private FlagPlacer _flagPlacer;
-    private bool _playerClickLeftMouseButton = false;
     private Coroutine _coroutine;
 
+    private WaitForSeconds _waitForSeconds;
+    private WaitUntil _waitUntilNextClick;
+    private bool _playerClickLeftMouseButton = false;
+
     public event Action<Vector3> PositionPicked;
+
+    private void Awake()
+    {
+        _waitForSeconds = new(_secondClickDelay);
+        _waitUntilNextClick = new(() => _playerClickLeftMouseButton == true);
+    }
 
     private void OnEnable()
     {
@@ -36,11 +47,11 @@ public class ColonizationController : MonoBehaviour
 
     private IEnumerator TrySetFlag()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return _waitForSeconds;
 
         _playerClickLeftMouseButton = false;
 
-        yield return new WaitUntil(() => _playerClickLeftMouseButton == true);
+        yield return _waitUntilNextClick;
 
         if (_flagPlacer.TryGetPlaceForFlag(out Vector3 placePosition))
         {

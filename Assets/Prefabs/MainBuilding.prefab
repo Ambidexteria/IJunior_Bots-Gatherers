@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 7388376894368989018}
   - component: {fileID: 6724371321986522513}
   - component: {fileID: 3868038888142549969}
+  - component: {fileID: 3289875744137894655}
+  - component: {fileID: 596475116678364752}
   m_Layer: 8
   m_Name: MainBuilding
   m_TagString: Untagged
@@ -36,7 +38,6 @@ Transform:
   - {fileID: 7982845551597921633}
   - {fileID: 7133147443412188517}
   - {fileID: 281650782157927696}
-  - {fileID: 7362471470094973472}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6724371321986522513
@@ -51,17 +52,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad19db12ba645234a934a196a10b0fa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bots: []
-  _maxBots: 5
-  _minBots: 1
-  _resourcesCount: 0
+  _botsDatabase: {fileID: 3289875744137894655}
+  _resourcesCount: 50
   _resourceCollector: {fileID: 2525081235842758105}
-  _resourceScanerDatabase: {fileID: 0}
-  _botSpawner: {fileID: 0}
-  _mainBuildingSpawner: {fileID: 0}
   _botSpawnPosition: {fileID: 7982845551597921633}
-  _colonizationController: {fileID: 5634040181354318824}
-  _botPrice: 3
+  _colonizationController: {fileID: 596475116678364752}
   _mainBuildingPrice: 5
   _mainBuildingFlag: {fileID: 1580122634155000822}
 --- !u!114 &3868038888142549969
@@ -76,6 +71,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72741d7bc72b742b1dfc4ae67e73ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3289875744137894655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158069545363909302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb635d61091ecf14cb266b57778f45da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bots: []
+  _maxBots: 5
+  _minBots: 1
+--- !u!114 &596475116678364752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1158069545363909302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df9581b0636a8b74497b28a37bea9dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _secondClickDelay: 0.1
 --- !u!1 &2067531716736214254
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,52 +266,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3501473894954883263
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7362471470094973472}
-  - component: {fileID: 5634040181354318824}
-  m_Layer: 0
-  m_Name: ColonizationController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7362471470094973472
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3501473894954883263}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.7603307, y: -0.92011017, z: 1.4765841}
-  m_LocalScale: {x: 0.2754821, y: 0.2754821, z: 0.2754821}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7388376894368989018}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5634040181354318824
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3501473894954883263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df9581b0636a8b74497b28a37bea9dd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _playerInput: {fileID: 0}
-  _flagPlacer: {fileID: 0}
 --- !u!1 &3534680734589797666
 GameObject:
   m_ObjectHideFlags: 0
