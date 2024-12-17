@@ -8,7 +8,6 @@ public class MainBuildingBotsDatabase : MonoBehaviour
     [SerializeField] private int _maxBots = 5;
     [SerializeField] private int _minBots = 1;
 
-    public int BotsCount => _bots.Count;
     public bool CanAddNewBot => _bots.Count < _maxBots;
     public bool BotsCountBiggerThanMin => _bots.Count > _minBots;
 

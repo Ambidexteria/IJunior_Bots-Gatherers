@@ -5,12 +5,12 @@ public class ActionUnloadResource : IUnitAction
 {
     private Resource _resource;
 
-    public event Action Completed;
-
     public ActionUnloadResource(Resource resource)
     {
         _resource = resource;
     }
+
+    public event Action Completed;
 
     public IEnumerator Launch()
     {

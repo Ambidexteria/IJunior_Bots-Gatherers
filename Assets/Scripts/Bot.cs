@@ -1,29 +1,18 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Bot : SpawnableObject
 {
-    [SerializeField] private static int _creationPrice = 3;
     [SerializeField] private float _waitTakeResourceTime = 0.5f;
     [SerializeField] private float _timeWaitAfterCompletedChainOfActions = 0.1f;
-    [SerializeField] private float _waitConstructionTime = 5f;
     [SerializeField] private MoverToTarget _moverToTarget;
     [SerializeField] private Transform _resourcePosition;
     [SerializeField] private ActionController _actionController;
 
     private BotState _state = BotState.Idle;
     private ChainOfActions _chain;
-    private WaitForSeconds _waitAfterChainOfActions;
 
     public BotState State => _state;
-    public static int CreationPrice => _creationPrice;
-
-    private void Awake()
-    {
-        _waitAfterChainOfActions = new(_timeWaitAfterCompletedChainOfActions);
-    }
 
     private void OnEnable()
     {
@@ -51,13 +40,6 @@ public class Bot : SpawnableObject
 
     private void SetIdleState()
     {
-        StartCoroutine(WaitBeforeSetIdleState());
-    }
-
-    private IEnumerator WaitBeforeSetIdleState()
-    {
-        yield return _waitAfterChainOfActions;
-
         _state = BotState.Idle;
     }
 
@@ -82,7 +64,7 @@ public class Bot : SpawnableObject
         {
             new ActionMoveToTarget(_moverToTarget, flag.transform),
             new ActionPlaceBuilding(building, flag.transform.position),
-            new ActionWaitConstructionEnd(building, flag, _waitConstructionTime),
+            new ActionWaitConstructionEnd(building, flag),
             new ActionWaitForAPeriodOfTime(_timeWaitAfterCompletedChainOfActions),
         };
 

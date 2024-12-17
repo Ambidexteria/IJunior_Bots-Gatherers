@@ -22,26 +22,22 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
         PrepareOnAwake();
     }
 
-    public virtual void PrepareOnAwake() { }
-
-    public abstract Type Spawn();
-
-    public abstract void Despawn(Type spawnableObject);
-
-    public void ReturnToPool(Type spawnableObject)
+    public Type Spawn()
     {
-        PrepareToDeactivate(spawnableObject);
+        return _pool.Get();
+    }
+
+    public void Despawn(Type spawnableObject)
+    {
+        PrepareForDespawn(ref spawnableObject);
         _pool.Release(spawnableObject);
     }
 
-    public Type GetNextObject()
-    {
-        Type nextObject = _pool.Get();
+    public virtual void PrepareOnAwake() { }
 
-        return nextObject;
-    }
+    public virtual void PrepareForSpawn(ref Type spawnableObject) { }
 
-    public virtual void PrepareToDeactivate(Type spawnableObject) { }
+    public virtual void PrepareForDespawn(ref Type spawnableObject) { }
 
     [Inject]
     private void Construct(GenericSpawnableObjectFactory<Type> factory)
@@ -49,16 +45,11 @@ public abstract class GenericSpawner<Type> : MonoBehaviour where Type : Spawnabl
         _factory = factory;
     }
 
-    private Type PrepareForSpawn(Type spawnedObject)
-    {
-        return spawnedObject;
-    }
-
     private void InitializePool()
     {
         _pool = new ObjectPool<Type>(
             createFunc: () => Create(),
-            actionOnGet: (spawnableObject) => PrepareForSpawn(spawnableObject),
+            actionOnGet: (spawnableObject) => PrepareForSpawn(ref spawnableObject),
             actionOnRelease: (spawnableObject) => spawnableObject.gameObject.SetActive(false),
             actionOnDestroy: (spawnableObject) => Destroy(spawnableObject.gameObject),
             defaultCapacity: _poolDefaultCapacity,

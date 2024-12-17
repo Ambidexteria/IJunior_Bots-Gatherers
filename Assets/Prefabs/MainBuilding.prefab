@@ -53,11 +53,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _botsDatabase: {fileID: 3289875744137894655}
-  _resourcesCount: 50
+  _resourcesCount: 0
   _resourceCollector: {fileID: 2525081235842758105}
   _botSpawnPosition: {fileID: 7982845551597921633}
   _colonizationController: {fileID: 596475116678364752}
-  _mainBuildingPrice: 5
+  _constructionPrice: 5
+  _constructionTime: 5
   _mainBuildingFlag: {fileID: 1580122634155000822}
 --- !u!114 &3868038888142549969
 MonoBehaviour:

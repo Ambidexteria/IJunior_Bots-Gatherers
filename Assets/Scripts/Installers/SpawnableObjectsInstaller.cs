@@ -9,7 +9,7 @@ public class SpawnableObjectsInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
-        var abc = Container.BindFactory<MainBuilding, GenericSpawnableObjectFactory<MainBuilding>>().FromComponentInNewPrefab(_mainBuildingPrefab).Lazy();
+        Container.BindFactory<MainBuilding, GenericSpawnableObjectFactory<MainBuilding>>().FromComponentInNewPrefab(_mainBuildingPrefab).Lazy();
         Container.BindFactory<Resource, GenericSpawnableObjectFactory<Resource>>().FromComponentInNewPrefab(_resourcePrefab).Lazy();
         Container.BindFactory<Bot, GenericSpawnableObjectFactory<Bot>>().FromComponentInNewPrefab(_botPrefab).Lazy();
     }

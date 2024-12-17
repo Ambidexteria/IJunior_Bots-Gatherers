@@ -377,7 +377,6 @@ MonoBehaviour:
   _botSpawnerPrefab: {fileID: 4793206399205359771, guid: 11579c69a3a163149b700ca30a7f0cbf, type: 3}
   _resourceScanerPrefab: {fileID: 7379417382460914738, guid: ee0c0696b5571e24298abdd0a6f2d1c0, type: 3}
   _mainBuildingSpawnerPrefab: {fileID: 3703268017951307840, guid: 9fe4a9ecc3cecd940b04be25ed820511, type: 3}
-  _colonizationControllerPrefab: {fileID: 115531819372915539, guid: 9aec623f63682ff49a5eaa50a69d76e2, type: 3}
 --- !u!114 &513183623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,7 +579,7 @@ MonoBehaviour:
   _mask:
     serializedVersion: 2
     m_Bits: 256
-  _mainCamera: {fileID: 963194227}
+  _raycastLength: 200
 --- !u!4 &807605725
 Transform:
   m_ObjectHideFlags: 0
@@ -681,8 +680,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.32301146, y: 0.27731854, z: -0.09959397, w: -0.8993549}
-  m_LocalPosition: {x: 46.204002, y: 40.421566, z: -55.107212}
+  m_LocalRotation: {x: -0.312883, y: 0.318174, z: -0.112116665, w: -0.8878623}
+  m_LocalPosition: {x: 33.274105, y: 27.382662, z: -38.631508}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -827,7 +826,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8820238915120658790, guid: 4f3869877ac72cf458b4c038f2cf2888, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.16
+      value: 11.3
       objectReference: {fileID: 0}
     - target: {fileID: 8820238915120658790, guid: 4f3869877ac72cf458b4c038f2cf2888, type: 3}
       propertyPath: m_LocalPosition.z
@@ -973,7 +972,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6724371321986522513, guid: ec3d27fbb5c1d3b4a96d8ca27dd21cc0, type: 3}
       propertyPath: _resourcesCount
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6724371321986522513, guid: ec3d27fbb5c1d3b4a96d8ca27dd21cc0, type: 3}
       propertyPath: _bots.Array.size

@@ -8,11 +8,11 @@ public class ActionWaitConstructionEnd : IUnitAction
     private WaitForSeconds _wait;
     private IBuilding _building;
 
-    public ActionWaitConstructionEnd(IBuilding building, MainBuildingFlag flag, float waitTime)
+    public ActionWaitConstructionEnd(IBuilding building, MainBuildingFlag flag)
     {
         _building = building;
         _flag = flag;
-        _wait = new WaitForSeconds(waitTime);
+        _wait = new WaitForSeconds(building.ConstructionTime);
     }
 
     public event Action Completed;

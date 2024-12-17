@@ -23,19 +23,16 @@ public class ResourceSpawner : GenericSpawner<Resource>
         StartCoroutine(LaunchSpawnCoroutine());
     }
 
-    public override void Despawn(Resource resource)
+    public override void PrepareForDespawn(ref Resource resource)
     {
         resource.ResetRotationAndScale();
         resource.Collected -= Despawn;
 
         _resourcesOnMap.Remove(resource);
-        ReturnToPool(resource);
     }
 
-    public override Resource Spawn()
+    public override void PrepareForSpawn(ref Resource resource)
     {
-        Resource resource = GetNextObject();
-
         resource.transform.position = _spawnZone.GetRandomSpawnPositionOnPlaneWithVerticalOffset();
         resource.Collected += Despawn;
         resource.Drop();
@@ -45,8 +42,6 @@ public class ResourceSpawner : GenericSpawner<Resource>
 
         _resourcesOnMap.Add(resource);
         _resourceNumber++;
-
-        return resource;
     }
 
     private IEnumerator LaunchSpawnCoroutine()

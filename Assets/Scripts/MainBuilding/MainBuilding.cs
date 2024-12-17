@@ -9,7 +9,9 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     [SerializeField] private ResourceCollector _resourceCollector;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private ColonizationController _colonizationController;
-    [SerializeField] private int _mainBuildingPrice = 5;
+    [SerializeField] private int _mainBUildingConstructionPrice = 5;
+    [SerializeField] private int _botConstructionPrice = 3;
+    [SerializeField] private float _constructionTime = 5f;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
 
     private ResourceScanerDatabase _resourceScanerDatabase;
@@ -19,7 +21,8 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     public event Action<int> ResourcesCountChanged;
     public event Action<Vector3> ConstructionFlagSet;
 
-    public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingPrice;
+    public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBUildingConstructionPrice;
+    public float ConstructionTime => _constructionTime;
 
     private void OnEnable()
     {
@@ -47,7 +50,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
             _botsDatabase.AddNewBot(newBot);
             newBot.transform.position = _botSpawnPosition.position;
 
-            _resourcesCount -= Bot.CreationPrice;
+            _resourcesCount -= _botConstructionPrice;
             ResourcesCountChanged?.Invoke(_resourcesCount);
         }
     }
@@ -102,7 +105,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
         _mainBuildingSpawner = mainBuildingSpawner;
     }
 
-    private bool IsBotCanBeCreated() => _resourcesCount >= Bot.CreationPrice && _botsDatabase.CanAddNewBot;
+    private bool IsBotCanBeCreated() => _resourcesCount >= _botConstructionPrice && _botsDatabase.CanAddNewBot;
 
     private void SetFlagForConstructionNewMainBuilding(Vector3 placePosition)
     {
@@ -132,7 +135,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     private void SendBotForConstruction(Bot bot, IBuilding building)
     {
         bot.SendForConstructionMainBuilding(_mainBuildingFlag, building);
-        _resourcesCount -= _mainBuildingPrice;
+        _resourcesCount -= _mainBUildingConstructionPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 }

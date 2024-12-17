@@ -7,13 +7,13 @@ public class ActionMoveToTarget : IUnitAction
     private MoverToTarget _mover;
     private Transform _target;
 
-    public event Action Completed;
-
     public ActionMoveToTarget (MoverToTarget moverToTarget, Transform target)
     {
         _mover = moverToTarget;
         _target = target;
     }
+
+    public event Action Completed;
 
     public IEnumerator Launch()
     {
