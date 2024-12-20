@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using DG.Tweening;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class MoverToTarget : MonoBehaviour
@@ -10,6 +10,7 @@ public class MoverToTarget : MonoBehaviour
     [SerializeField] private float _minPositionToTarget = 0.5f;
     [SerializeField] private Transform _target;
     [SerializeField] private Transform _forwardPoint;
+    [SerializeField] private NavMeshAgent _agent;
 
     private Coroutine _coroutine;
 
@@ -33,17 +34,9 @@ public class MoverToTarget : MonoBehaviour
 
     private IEnumerator Move()
     {
-        Vector3 direction;
+        _agent.SetDestination(_target.position);
 
-        while (IsTargetReached() == false)
-        {
-            direction = _forwardPoint.position - transform.position;
-
-            transform.DOLookAt(_target.position, 0f, AxisConstraint.Y);
-            transform.Translate(direction * _speed * Time.deltaTime, Space.World);
-
-            yield return null;
-        }
+        yield return new WaitUntil(() => IsTargetReached());
     }
 
     private bool IsTargetReached()
