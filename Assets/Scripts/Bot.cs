@@ -62,7 +62,7 @@ public class Bot : SpawnableObject
     {
         List<IUnitAction> actions = new List<IUnitAction>
         {
-            new ActionMoveToTarget(_moverToTarget, flag.transform),
+            new ActionMoveToTarget(_moverToTarget, flag.transform, building.Size),
             new ActionPlaceBuilding(building, flag.transform.position),
             new ActionWaitConstructionEnd(building, flag),
             new ActionWaitForAPeriodOfTime(_timeWaitAfterCompletedChainOfActions),

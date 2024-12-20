@@ -9,7 +9,8 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     [SerializeField] private ResourceCollector _resourceCollector;
     [SerializeField] private Transform _botSpawnPosition;
     [SerializeField] private ColonizationController _colonizationController;
-    [SerializeField] private int _mainBUildingConstructionPrice = 5;
+    [SerializeField] private int _mainBuildingConstructionPrice = 5;
+    [SerializeField] private float _mainBuildingSize = 5f;
     [SerializeField] private int _botConstructionPrice = 3;
     [SerializeField] private float _constructionTime = 5f;
     [SerializeField] private MainBuildingFlag _mainBuildingFlag;
@@ -21,8 +22,9 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     public event Action<int> ResourcesCountChanged;
     public event Action<Vector3> ConstructionFlagSet;
 
-    public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBUildingConstructionPrice;
+    public bool IsResourcesEnoughForConstructionNewMainBuilding => _resourcesCount >= _mainBuildingConstructionPrice;
     public float ConstructionTime => _constructionTime;
+    public float Size => _mainBuildingSize;
 
     private void OnEnable()
     {
@@ -135,7 +137,7 @@ public class MainBuilding : SpawnableObject, IBuilding, IPickable
     private void SendBotForConstruction(Bot bot, IBuilding building)
     {
         bot.SendForConstructionMainBuilding(_mainBuildingFlag, building);
-        _resourcesCount -= _mainBUildingConstructionPrice;
+        _resourcesCount -= _mainBuildingConstructionPrice;
         ResourcesCountChanged?.Invoke(_resourcesCount);
     }
 }
